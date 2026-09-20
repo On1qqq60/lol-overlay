@@ -1,0 +1,51 @@
+{
+  "activePlayer": {
+    "summonerName": "Me",
+    "currentGold": 1200
+  },
+  "allPlayers": [
+    {
+      "championName": "Ahri",
+      "summonerName": "Me",
+      "team": "ORDER",
+      "position": "MIDDLE",
+      "level": 11,
+      "isDead": false,
+      "scores": { "kills": 4, "deaths": 2, "assists": 5 },
+      "items": [
+        { "itemID": 3118, "slot": 0 },
+        { "itemID": 3111, "slot": 1 },
+        { "itemID": 3802, "slot": 2 }
+      ]
+    },
+    {
+      "championName": "Poppy",
+      "summonerName": "PixelGames45",
+      "team": "CHAOS",
+      "position": "UTILITY",
+      "level": 15,
+      "isDead": false,
+      "scores": { "kills": 12, "deaths": 1, "assists": 4 },
+      "items": [
+        { "itemID": 3142, "slot": 0 },
+        { "itemID": 3072, "slot": 1 },
+        { "itemID": 3134, "slot": 2 },
+        { "itemID": 3133, "slot": 3 },
+        { "itemID": 3009, "slot": 4 }
+      ]
+    },
+    {
+      "championName": "Ashe",
+      "summonerName": "EnemyADC",
+      "team": "CHAOS",
+      "position": "BOTTOM",
+      "level": 12,
+      "isDead": false,
+      "scores": { "kills": 3, "deaths": 4, "assists": 6 },
+      "items": [
+        { "itemID": 3031, "slot": 0 },
+        { "itemID": 3006, "slot": 1 }
+      ]
+    }
+  ]
+}

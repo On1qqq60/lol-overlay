@@ -1,0 +1,10 @@
+/bin/
+*.exe
+*.test
+testdata/generated/
+data/champion_abilities.json
+__pycache__/
+*.pyc
+.DS_Store
+snap.json
+live_snap.json

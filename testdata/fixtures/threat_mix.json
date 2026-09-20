@@ -1,0 +1,66 @@
+{
+  "activePlayer": {
+    "summonerName": "Me",
+    "currentGold": 800
+  },
+  "allPlayers": [
+    {
+      "championName": "Ahri",
+      "summonerName": "Me",
+      "team": "ORDER",
+      "position": "MIDDLE",
+      "level": 10,
+      "isDead": false,
+      "scores": { "kills": 5, "deaths": 2, "assists": 3 },
+      "items": [
+        { "itemID": 3118, "slot": 0 },
+        { "itemID": 3111, "slot": 1 }
+      ]
+    },
+    {
+      "championName": "Zed",
+      "summonerName": "Feeder",
+      "team": "CHAOS",
+      "position": "MIDDLE",
+      "level": 7,
+      "isDead": false,
+      "scores": { "kills": 0, "deaths": 20, "assists": 0 },
+      "items": [
+        { "itemID": 3142, "slot": 0 }
+      ]
+    },
+    {
+      "championName": "Soraka",
+      "summonerName": "FedSupport",
+      "team": "CHAOS",
+      "position": "UTILITY",
+      "level": 14,
+      "isDead": false,
+      "scores": { "kills": 2, "deaths": 1, "assists": 25 },
+      "items": [
+        { "itemID": 2065, "slot": 0 },
+        { "itemID": 3107, "slot": 1 },
+        { "itemID": 3222, "slot": 2 },
+        { "itemID": 3504, "slot": 3 },
+        { "itemID": 3117, "slot": 4 }
+      ]
+    },
+    {
+      "championName": "Sion",
+      "summonerName": "WeakTankFed",
+      "team": "CHAOS",
+      "position": "TOP",
+      "level": 16,
+      "isDead": false,
+      "scores": { "kills": 20, "deaths": 0, "assists": 5 },
+      "items": [
+        { "itemID": 3742, "slot": 0 },
+        { "itemID": 3068, "slot": 1 },
+        { "itemID": 3075, "slot": 2 },
+        { "itemID": 3143, "slot": 3 },
+        { "itemID": 3083, "slot": 4 },
+        { "itemID": 3047, "slot": 5 }
+      ]
+    }
+  ]
+}

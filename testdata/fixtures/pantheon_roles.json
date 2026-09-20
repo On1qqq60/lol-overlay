@@ -1,0 +1,38 @@
+{
+  "activePlayer": {
+    "summonerName": "Me",
+    "currentGold": 0
+  },
+  "allPlayers": [
+    {
+      "championName": "Ahri",
+      "summonerName": "Me",
+      "team": "ORDER",
+      "position": "MIDDLE",
+      "level": 5,
+      "isDead": false,
+      "scores": { "kills": 1, "deaths": 0, "assists": 1 },
+      "items": [{ "itemID": 1056, "slot": 0 }]
+    },
+    {
+      "championName": "Pantheon",
+      "summonerName": "PanthSup",
+      "team": "CHAOS",
+      "position": "UTILITY",
+      "level": 4,
+      "isDead": false,
+      "scores": { "kills": 0, "deaths": 1, "assists": 2 },
+      "items": []
+    },
+    {
+      "championName": "Pantheon",
+      "summonerName": "PanthMid",
+      "team": "CHAOS",
+      "position": "MIDDLE",
+      "level": 5,
+      "isDead": false,
+      "scores": { "kills": 2, "deaths": 0, "assists": 0 },
+      "items": []
+    }
+  ]
+}
