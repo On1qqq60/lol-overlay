@@ -1,0 +1,60 @@
+{
+  "activePlayer": {
+    "summonerName": "Me",
+    "currentGold": 500
+  },
+  "allPlayers": [
+    {
+      "championName": "Ahri",
+      "summonerName": "Me",
+      "team": "ORDER",
+      "position": "MIDDLE",
+      "level": 6,
+      "isDead": false,
+      "scores": { "kills": 1, "deaths": 0, "assists": 0 },
+      "items": [
+        { "itemID": 1056, "slot": 0 }
+      ]
+    },
+    {
+      "championName": "Poppy",
+      "summonerName": "EnemySup",
+      "team": "CHAOS",
+      "position": "UTILITY",
+      "level": 5,
+      "isDead": false,
+      "scores": { "kills": 0, "deaths": 1, "assists": 3 },
+      "items": [
+        { "itemID": 3742, "slot": 0 },
+        { "itemID": 3190, "slot": 1 },
+        { "itemID": 3075, "slot": 2 },
+        { "itemID": 3009, "slot": 3 }
+      ]
+    },
+    {
+      "championName": "Zed",
+      "summonerName": "EnemyMid",
+      "team": "CHAOS",
+      "position": "MIDDLE",
+      "level": 6,
+      "isDead": false,
+      "scores": { "kills": 2, "deaths": 2, "assists": 1 },
+      "items": [
+        { "itemID": 3134, "slot": 0 },
+        { "itemID": 1001, "slot": 1 }
+      ]
+    },
+    {
+      "championName": "Malphite",
+      "summonerName": "AllyTop",
+      "team": "ORDER",
+      "position": "TOP",
+      "level": 6,
+      "isDead": false,
+      "scores": { "kills": 1, "deaths": 1, "assists": 2 },
+      "items": [
+        { "itemID": 3068, "slot": 0 }
+      ]
+    }
+  ]
+}

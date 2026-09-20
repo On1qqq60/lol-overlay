@@ -1,0 +1,1866 @@
+{
+  "source": "curated",
+  "count": 173,
+  "champions": {
+    "Aatrox": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "sustain",
+        "juggernaut",
+        "all_in"
+      ]
+    },
+    "Ahri": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Akali": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Akshan": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "ranged",
+        "burst",
+        "dive",
+        "mobility",
+        "pick",
+        "dps"
+      ]
+    },
+    "Alistar": {
+      "primary": "support",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "cc_hard",
+        "peel",
+        "tank",
+        "sustain"
+      ]
+    },
+    "Ambessa": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "burst",
+        "dive",
+        "mobility"
+      ]
+    },
+    "Amumu": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "cc_hard",
+        "peel",
+        "sustain"
+      ]
+    },
+    "Anivia": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "cc_hard",
+        "burst"
+      ]
+    },
+    "Annie": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "cc_hard",
+        "pick"
+      ]
+    },
+    "Aphelios": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps"
+      ]
+    },
+    "Ashe": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "poke",
+        "cc_hard",
+        "pick"
+      ]
+    },
+    "AurelionSol": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "dps",
+        "poke",
+        "cc_hard"
+      ]
+    },
+    "Aurora": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "mobility",
+        "pick",
+        "dive"
+      ]
+    },
+    "Azir": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "dps",
+        "poke",
+        "engage"
+      ]
+    },
+    "Bard": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "engage",
+        "peel",
+        "cc_hard",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Belveth": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dps",
+        "dive",
+        "mobility",
+        "sustain",
+        "splitpush"
+      ]
+    },
+    "Blitzcrank": {
+      "primary": "support",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "cc_hard",
+        "pick"
+      ]
+    },
+    "Brand": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst"
+      ]
+    },
+    "Braum": {
+      "primary": "support",
+      "tags": [
+        "ad",
+        "melee",
+        "peel",
+        "cc_hard",
+        "engage",
+        "tank",
+        "shield"
+      ]
+    },
+    "Briar": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dive",
+        "all_in",
+        "sustain",
+        "mobility"
+      ]
+    },
+    "Caitlyn": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "poke",
+        "pick"
+      ]
+    },
+    "Camille": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dive",
+        "mobility",
+        "pick",
+        "true",
+        "splitpush"
+      ]
+    },
+    "Cassiopeia": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "dps",
+        "cc_hard",
+        "poke"
+      ]
+    },
+    "Chogath": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "cc_hard",
+        "sustain",
+        "true",
+        "poke"
+      ]
+    },
+    "Corki": {
+      "primary": "marksman",
+      "tags": [
+        "hybrid",
+        "ranged",
+        "dps",
+        "poke",
+        "mobility"
+      ]
+    },
+    "Darius": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "juggernaut",
+        "engage",
+        "sustain",
+        "all_in",
+        "cc_hard"
+      ]
+    },
+    "Diana": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "engage"
+      ]
+    },
+    "DrMundo": {
+      "primary": "tank",
+      "tags": [
+        "ad",
+        "melee",
+        "sustain",
+        "juggernaut",
+        "splitpush"
+      ]
+    },
+    "Draven": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "burst"
+      ]
+    },
+    "Ekko": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Elise": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Evelynn": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Ezreal": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "poke",
+        "mobility",
+        "dps"
+      ]
+    },
+    "Fiddlesticks": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "cc_hard",
+        "pick",
+        "engage"
+      ]
+    },
+    "Fiora": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dps",
+        "true",
+        "mobility",
+        "splitpush",
+        "sustain"
+      ]
+    },
+    "Fizz": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Galio": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "cc_hard",
+        "peel",
+        "mobility"
+      ]
+    },
+    "Gangplank": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "poke",
+        "burst",
+        "splitpush",
+        "sustain"
+      ]
+    },
+    "Garen": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "juggernaut",
+        "engage",
+        "sustain",
+        "all_in"
+      ]
+    },
+    "Gnar": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "ranged",
+        "engage",
+        "cc_hard",
+        "poke",
+        "mobility"
+      ]
+    },
+    "Gragas": {
+      "primary": "fighter",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "cc_hard",
+        "mobility",
+        "peel"
+      ]
+    },
+    "Graves": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "burst",
+        "dps",
+        "mobility",
+        "splitpush"
+      ]
+    },
+    "Gwen": {
+      "primary": "fighter",
+      "tags": [
+        "ap",
+        "melee",
+        "dps",
+        "true",
+        "dive",
+        "mobility",
+        "splitpush"
+      ]
+    },
+    "Hecarim": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "dive",
+        "mobility",
+        "sustain"
+      ]
+    },
+    "Heimerdinger": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst"
+      ]
+    },
+    "Hwei": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst",
+        "cc_hard"
+      ]
+    },
+    "Illaoi": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "juggernaut",
+        "sustain",
+        "all_in",
+        "splitpush"
+      ]
+    },
+    "Irelia": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dive",
+        "mobility",
+        "dps",
+        "sustain"
+      ]
+    },
+    "Ivern": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "shield",
+        "peel",
+        "cc_hard"
+      ]
+    },
+    "Janna": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "peel",
+        "shield",
+        "cc_hard"
+      ]
+    },
+    "JarvanIV": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "dive",
+        "mobility",
+        "cc_hard"
+      ]
+    },
+    "Jax": {
+      "primary": "fighter",
+      "tags": [
+        "hybrid",
+        "melee",
+        "dps",
+        "dive",
+        "mobility",
+        "splitpush",
+        "sustain"
+      ]
+    },
+    "Jayce": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "poke",
+        "burst",
+        "mobility",
+        "all_in"
+      ]
+    },
+    "Jhin": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "burst",
+        "poke",
+        "pick"
+      ]
+    },
+    "Jinx": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "splitpush"
+      ]
+    },
+    "KSante": {
+      "primary": "tank",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "cc_hard",
+        "peel",
+        "all_in",
+        "sustain"
+      ]
+    },
+    "Kaisa": {
+      "primary": "marksman",
+      "tags": [
+        "hybrid",
+        "ranged",
+        "dps",
+        "burst",
+        "mobility",
+        "dive"
+      ]
+    },
+    "Kalista": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "mobility",
+        "engage"
+      ]
+    },
+    "Karma": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "shield",
+        "poke",
+        "peel"
+      ]
+    },
+    "Karthus": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "dps",
+        "poke"
+      ]
+    },
+    "Kassadin": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Katarina": {
+      "primary": "assassin",
+      "tags": [
+        "hybrid",
+        "melee",
+        "burst",
+        "dive",
+        "mobility"
+      ]
+    },
+    "Kayle": {
+      "primary": "marksman",
+      "tags": [
+        "hybrid",
+        "melee",
+        "dps",
+        "sustain"
+      ]
+    },
+    "Kayn": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dive",
+        "mobility",
+        "burst",
+        "pick"
+      ]
+    },
+    "Kennen": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "engage",
+        "cc_hard",
+        "mobility"
+      ]
+    },
+    "Khazix": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Kindred": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "mobility",
+        "dive"
+      ]
+    },
+    "Kled": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "all_in",
+        "mobility",
+        "sustain"
+      ]
+    },
+    "KogMaw": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "poke"
+      ]
+    },
+    "Leblanc": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "LeeSin": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "dive",
+        "mobility",
+        "pick",
+        "peel"
+      ]
+    },
+    "Leona": {
+      "primary": "support",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "cc_hard",
+        "tank"
+      ]
+    },
+    "Lillia": {
+      "primary": "fighter",
+      "tags": [
+        "ap",
+        "ranged",
+        "dps",
+        "cc_hard",
+        "mobility",
+        "engage"
+      ]
+    },
+    "Lissandra": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "cc_hard",
+        "engage",
+        "peel"
+      ]
+    },
+    "Locke": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Lucian": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "burst",
+        "mobility"
+      ]
+    },
+    "Lulu": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "peel",
+        "shield",
+        "poke"
+      ]
+    },
+    "Lux": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst",
+        "cc_hard",
+        "pick",
+        "shield"
+      ]
+    },
+    "Malphite": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "cc_hard",
+        "peel"
+      ]
+    },
+    "Malzahar": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "cc_hard",
+        "pick"
+      ]
+    },
+    "Maokai": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "cc_hard",
+        "peel",
+        "sustain"
+      ]
+    },
+    "MasterYi": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dps",
+        "dive",
+        "mobility",
+        "true",
+        "splitpush"
+      ]
+    },
+    "Mel": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst"
+      ]
+    },
+    "Milio": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "healer",
+        "shield",
+        "peel"
+      ]
+    },
+    "MissFortune": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "poke"
+      ]
+    },
+    "MonkeyKing": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "dive",
+        "mobility",
+        "burst"
+      ]
+    },
+    "Mordekaiser": {
+      "primary": "fighter",
+      "tags": [
+        "ap",
+        "melee",
+        "juggernaut",
+        "all_in",
+        "sustain"
+      ]
+    },
+    "Morgana": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "peel",
+        "shield",
+        "cc_hard",
+        "poke"
+      ]
+    },
+    "Naafiri": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Nami": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "healer",
+        "peel",
+        "cc_hard",
+        "poke"
+      ]
+    },
+    "Nasus": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "juggernaut",
+        "sustain",
+        "splitpush",
+        "cc_hard"
+      ]
+    },
+    "Nautilus": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "cc_hard",
+        "tank",
+        "pick"
+      ]
+    },
+    "Neeko": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "cc_hard",
+        "pick",
+        "engage"
+      ]
+    },
+    "Nidalee": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Nilah": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "melee",
+        "dps",
+        "dive",
+        "mobility",
+        "sustain"
+      ]
+    },
+    "Nocturne": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Nunu": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "cc_hard",
+        "sustain",
+        "mobility"
+      ]
+    },
+    "Olaf": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "sustain",
+        "all_in",
+        "dps"
+      ]
+    },
+    "Orianna": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst",
+        "shield",
+        "engage"
+      ]
+    },
+    "Ornn": {
+      "primary": "tank",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "cc_hard",
+        "peel",
+        "sustain"
+      ]
+    },
+    "Pantheon": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Poppy": {
+      "primary": "tank",
+      "tags": [
+        "ad",
+        "melee",
+        "fighter",
+        "engage",
+        "anti_dash",
+        "cc_hard"
+      ]
+    },
+    "Pyke": {
+      "primary": "support",
+      "tags": [
+        "ad",
+        "melee",
+        "assassin",
+        "burst",
+        "dive",
+        "mobility",
+        "pick",
+        "cc_hard"
+      ]
+    },
+    "Qiyana": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick",
+        "cc_hard"
+      ]
+    },
+    "Quinn": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "burst",
+        "mobility",
+        "pick",
+        "splitpush"
+      ]
+    },
+    "Rakan": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "peel",
+        "shield",
+        "mobility",
+        "cc_hard"
+      ]
+    },
+    "Rammus": {
+      "primary": "tank",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "cc_hard",
+        "mobility",
+        "peel"
+      ]
+    },
+    "RekSai": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Rell": {
+      "primary": "support",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "cc_hard",
+        "tank",
+        "peel"
+      ]
+    },
+    "Renata": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "peel",
+        "shield",
+        "cc_hard",
+        "poke"
+      ]
+    },
+    "Renekton": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "sustain",
+        "burst",
+        "mobility"
+      ]
+    },
+    "Rengar": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick",
+        "all_in"
+      ]
+    },
+    "Riven": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "engage",
+        "all_in"
+      ]
+    },
+    "Rumble": {
+      "primary": "fighter",
+      "tags": [
+        "ap",
+        "melee",
+        "poke",
+        "burst",
+        "engage",
+        "sustain"
+      ]
+    },
+    "Ryze": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "dps",
+        "poke",
+        "mobility"
+      ]
+    },
+    "Samira": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "burst",
+        "dive",
+        "mobility",
+        "all_in"
+      ]
+    },
+    "Sejuani": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "cc_hard",
+        "peel",
+        "sustain"
+      ]
+    },
+    "Senna": {
+      "primary": "support",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "poke",
+        "healer"
+      ]
+    },
+    "Seraphine": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "shield",
+        "cc_hard"
+      ]
+    },
+    "Sett": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "juggernaut",
+        "all_in",
+        "engage",
+        "sustain"
+      ]
+    },
+    "Shaco": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick",
+        "splitpush"
+      ]
+    },
+    "Shen": {
+      "primary": "tank",
+      "tags": [
+        "ad",
+        "melee",
+        "peel",
+        "engage",
+        "shield",
+        "sustain",
+        "splitpush"
+      ]
+    },
+    "Shyvana": {
+      "primary": "fighter",
+      "tags": [
+        "hybrid",
+        "melee",
+        "dps",
+        "dive",
+        "sustain",
+        "splitpush"
+      ]
+    },
+    "Singed": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "poke",
+        "cc_hard",
+        "sustain",
+        "splitpush"
+      ]
+    },
+    "Sion": {
+      "primary": "tank",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "cc_hard",
+        "sustain",
+        "juggernaut"
+      ]
+    },
+    "Sivir": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "shield",
+        "mobility"
+      ]
+    },
+    "Skarner": {
+      "primary": "tank",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "cc_hard",
+        "pick",
+        "sustain"
+      ]
+    },
+    "Smolder": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "poke"
+      ]
+    },
+    "Sona": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "healer",
+        "shield",
+        "poke"
+      ]
+    },
+    "Soraka": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "healer",
+        "peel"
+      ]
+    },
+    "Swain": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "dps",
+        "sustain",
+        "cc_hard",
+        "engage"
+      ]
+    },
+    "Sylas": {
+      "primary": "assassin",
+      "tags": [
+        "ap",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "sustain"
+      ]
+    },
+    "Syndra": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "poke",
+        "pick",
+        "cc_hard"
+      ]
+    },
+    "TahmKench": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "support",
+        "engage",
+        "peel",
+        "sustain",
+        "cc_hard"
+      ]
+    },
+    "Taliyah": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst",
+        "mobility",
+        "cc_hard"
+      ]
+    },
+    "Talon": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Taric": {
+      "primary": "support",
+      "tags": [
+        "ad",
+        "melee",
+        "healer",
+        "shield",
+        "peel",
+        "cc_hard",
+        "engage"
+      ]
+    },
+    "Teemo": {
+      "primary": "marksman",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "splitpush"
+      ]
+    },
+    "Thresh": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "engage",
+        "peel",
+        "cc_hard",
+        "pick"
+      ]
+    },
+    "Tristana": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "burst",
+        "mobility",
+        "dive"
+      ]
+    },
+    "Trundle": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "sustain",
+        "dps",
+        "splitpush",
+        "engage"
+      ]
+    },
+    "Tryndamere": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dps",
+        "splitpush",
+        "sustain",
+        "mobility",
+        "all_in"
+      ]
+    },
+    "TwistedFate": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst",
+        "pick",
+        "mobility",
+        "cc_hard"
+      ]
+    },
+    "Twitch": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "burst",
+        "pick"
+      ]
+    },
+    "Udyr": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "sustain",
+        "dps",
+        "mobility"
+      ]
+    },
+    "Urgot": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "ranged",
+        "juggernaut",
+        "engage",
+        "cc_hard",
+        "all_in"
+      ]
+    },
+    "Varus": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "poke",
+        "cc_hard",
+        "pick"
+      ]
+    },
+    "Vayne": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "true",
+        "mobility",
+        "dive",
+        "splitpush"
+      ]
+    },
+    "Veigar": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "cc_hard",
+        "pick"
+      ]
+    },
+    "Velkoz": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "true",
+        "burst"
+      ]
+    },
+    "Vex": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "pick",
+        "anti_dash",
+        "mobility"
+      ]
+    },
+    "Vi": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "dive",
+        "mobility",
+        "cc_hard",
+        "burst"
+      ]
+    },
+    "Viego": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dive",
+        "mobility",
+        "dps",
+        "sustain"
+      ]
+    },
+    "Viktor": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "dps",
+        "burst"
+      ]
+    },
+    "Vladimir": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "sustain",
+        "burst",
+        "dps"
+      ]
+    },
+    "Volibear": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "sustain",
+        "cc_hard",
+        "dive"
+      ]
+    },
+    "Warwick": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dive",
+        "sustain",
+        "mobility",
+        "all_in"
+      ]
+    },
+    "Xayah": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "peel"
+      ]
+    },
+    "Xerath": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst",
+        "pick"
+      ]
+    },
+    "XinZhao": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "dive",
+        "sustain",
+        "all_in"
+      ]
+    },
+    "Yasuo": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dps",
+        "dive",
+        "mobility",
+        "engage",
+        "all_in"
+      ]
+    },
+    "Yone": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "dps",
+        "dive",
+        "mobility",
+        "engage",
+        "all_in"
+      ]
+    },
+    "Yorick": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "juggernaut",
+        "splitpush",
+        "sustain"
+      ]
+    },
+    "Yunara": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps"
+      ]
+    },
+    "Yuumi": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "healer",
+        "shield",
+        "mobility"
+      ]
+    },
+    "Zaahen": {
+      "primary": "fighter",
+      "tags": [
+        "ad",
+        "melee",
+        "engage",
+        "juggernaut",
+        "sustain"
+      ]
+    },
+    "Zac": {
+      "primary": "tank",
+      "tags": [
+        "ap",
+        "melee",
+        "engage",
+        "cc_hard",
+        "sustain",
+        "mobility"
+      ]
+    },
+    "Zed": {
+      "primary": "assassin",
+      "tags": [
+        "ad",
+        "melee",
+        "burst",
+        "dive",
+        "mobility",
+        "pick"
+      ]
+    },
+    "Zeri": {
+      "primary": "marksman",
+      "tags": [
+        "ad",
+        "ranged",
+        "dps",
+        "mobility"
+      ]
+    },
+    "Ziggs": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "burst",
+        "splitpush"
+      ]
+    },
+    "Zilean": {
+      "primary": "support",
+      "tags": [
+        "ap",
+        "ranged",
+        "peel",
+        "cc_hard",
+        "poke"
+      ]
+    },
+    "Zoe": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "burst",
+        "pick",
+        "poke",
+        "mobility"
+      ]
+    },
+    "Zyra": {
+      "primary": "mage",
+      "tags": [
+        "ap",
+        "ranged",
+        "poke",
+        "cc_hard",
+        "burst"
+      ]
+    }
+  }
+}

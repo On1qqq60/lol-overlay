@@ -1,0 +1,60 @@
+{
+  "activePlayer": {
+    "summonerName": "Me",
+    "currentGold": 450
+  },
+  "allPlayers": [
+    {
+      "championName": "Ahri",
+      "summonerName": "Me",
+      "team": "ORDER",
+      "position": "MIDDLE",
+      "level": 3,
+      "isDead": false,
+      "scores": { "kills": 0, "deaths": 0, "assists": 0 },
+      "items": [
+        { "itemID": 1056, "slot": 0 }
+      ]
+    },
+    {
+      "championName": "Poppy",
+      "summonerName": "E1",
+      "team": "CHAOS",
+      "position": "UTILITY",
+      "level": 1,
+      "isDead": false,
+      "scores": { "kills": 0, "deaths": 0, "assists": 0 },
+      "items": []
+    },
+    {
+      "championName": "Veigar",
+      "summonerName": "E2",
+      "team": "CHAOS",
+      "position": "MIDDLE",
+      "level": 1,
+      "isDead": false,
+      "scores": { "kills": 0, "deaths": 0, "assists": 0 },
+      "items": []
+    },
+    {
+      "championName": "Soraka",
+      "summonerName": "E3",
+      "team": "CHAOS",
+      "position": "UTILITY",
+      "level": 1,
+      "isDead": false,
+      "scores": { "kills": 0, "deaths": 0, "assists": 0 },
+      "items": []
+    },
+    {
+      "championName": "Pantheon",
+      "summonerName": "E4",
+      "team": "CHAOS",
+      "position": "TOP",
+      "level": 1,
+      "isDead": false,
+      "scores": { "kills": 0, "deaths": 0, "assists": 0 },
+      "items": []
+    }
+  ]
+}
