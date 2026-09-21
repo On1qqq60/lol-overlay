@@ -64,7 +64,7 @@ go run ./cmd/recommend -fixture snap.json
 ## Что делает движок
 
 1. Резолвит теги активного чемпиона (`data/champion_tags.json`, с учётом `by_role`)
-2. Берёт seed-шаблон (mage / assassin / marksman / fighter / tank / support + jungle/support-роутинг)
+2. Берёт seed-шаблон (mage / assassin / marksman / fighter / tank / support + jungle/support-роутинг). Танк с тегом fighter (Poppy и похожие) идёт в bruiser-сид, не в чистый Sunfire
 3. Подстраивает приоритеты под драфт и live-pressure врагов
 4. Учитывает lane-оппонента для ботинок, фронтлайн союзников
 5. Синхронизирует старт с инвентарём **только** если стартер той же семьи (Blade ≠ Ring ≠ Shield ≠ Atlas ≠ pet)
@@ -138,6 +138,17 @@ scripts/                fetch + генератор фикстур
 data/                   статический геймдата
 testdata/fixtures/      эталонные снапшоты
 ```
+
+## Журнал алгоритма
+
+### 22 сентября 2026
+
+Что поменялось в правилах рекомендации (не UI):
+
+- **Роутинг сида tank×fighter.** Если primary — tank, но в тегах есть `fighter`, `seedByClass` больше не отдаёт `SeedTank()` (Sunfire-only). Вместо этого `SeedTankFighter()`: Iceborn Gauntlet как кор, Sundered Sky и Black Cleaver как урон, Steelcaps/Mercs, Sterak / Force of Nature / Thornmail / Spirit Visage в хвосте. Чистые танки без fighter (Malphite и т.п.) остаются на Sunfire.
+- **Сапорт не смешивается с этим сидом.** Poppy на UTILITY по-прежнему support/engage (Locket), без Iceborn/Sundered.
+- **Контракт JSON.** У `Recommendation`, `Slot`, `ThreatRow` и `Pressure` появились json-теги (`itemId`, `role`, `nextItem`, …), чтобы HUD читал тот же объект, что печатает CLI.
+- **Связка с HUD.** `overlay/Start.bat` собирает `recommend.exe` из корня репозитория; оверлей дергает `-json -live` (или фикстуру) с `-root` на этот же tree.
 
 ## Замечания по Live Client
 
