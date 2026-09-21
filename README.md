@@ -7,8 +7,19 @@
 - [Go 1.22+](https://go.dev/dl/)
 - Python 3.10+ (только для генерации фикстур и обновления данных)
 - Запущенный клиент LoL **в матче** (для `-live`)
+- .NET Framework 4.x (для WPF-оверлея, обычно уже есть на Windows)
 
-## Быстрый старт
+## Оверлей
+
+C# HUD в `overlay/` собирает **это** Go-ядро и рисует следующий слот поверх клиента:
+
+```powershell
+overlay\Start.bat
+```
+
+Батник делает `go build ./cmd/recommend` в корне репозитория и кладёт `overlay\recommend.exe`. Оверлей вызывает его с `-json -root <корень>` (`-live`, иначе демо-фикстура).
+
+## Быстрый старт (CLI)
 
 ```powershell
 cd lol-overlay   # или lol-build-overlay
@@ -115,13 +126,14 @@ go test ./internal/...
 ## Структура
 
 ```text
-cmd/recommend/          CLI рекомендаций
+cmd/recommend/          CLI рекомендаций (JSON для оверлея)
 cmd/bootstrap-tags/     бутстрап тегов
 internal/engine/        Recommend, threat, pressure
 internal/rules/         seeds, draft/live adjust, start sync
 internal/tags/          таксономия чемпионов/предметов
 internal/liveclient/    парсер Live Client API
 internal/data/          загрузка data/
+overlay/                WPF HUD, вызывает recommend.exe
 scripts/                fetch + генератор фикстур
 data/                   статический геймдата
 testdata/fixtures/      эталонные снапшоты

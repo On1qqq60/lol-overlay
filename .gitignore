@@ -1,10 +1,20 @@
 /bin/
 *.exe
 *.test
+*.pdb
 testdata/generated/
 data/champion_abilities.json
 __pycache__/
 *.pyc
 .DS_Store
+Thumbs.db
 snap.json
 live_snap.json
+
+# Overlay runtime
+overlay/live.log
+overlay/overlay.err.txt
+overlay/overlay.out.txt
+overlay/err.txt
+overlay/out.txt
+overlay/settings.ini

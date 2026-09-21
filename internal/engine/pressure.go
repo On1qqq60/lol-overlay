@@ -4,14 +4,14 @@ import "lol-build-overlay/internal/tags"
 
 // Pressure aggregates weighted team signals for item priority.
 type Pressure struct {
-	Tank     float64
-	AD       float64
-	MR       float64
-	HealUtil float64
-	APBurst  float64
-	Crit     float64
-	CCHard   float64
-	Dive     float64
+	Tank     float64 `json:"tank"`
+	AD       float64 `json:"ad"`
+	MR       float64 `json:"mr"`
+	HealUtil float64 `json:"healUtil"`
+	APBurst  float64 `json:"apBurst"`
+	Crit     float64 `json:"crit"`
+	CCHard   float64 `json:"ccHard"`
+	Dive     float64 `json:"dive"`
 }
 
 // ComputePressure sums weight[i] * item/profile scores.

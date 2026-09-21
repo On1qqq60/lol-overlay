@@ -14,16 +14,16 @@ const (
 
 // ThreatRow is per-enemy threat math.
 type ThreatRow struct {
-	ChampionID    string
-	Form          float64
-	Econ          float64
-	Kit           float64
-	DamageThreat  float64
-	Weight        float64
-	Ignored       bool
-	MainTarget    bool
-	HealUtility   float64 // separate utility threat (enchanters)
-	LaneOpponent  bool
+	ChampionID    string  `json:"championId"`
+	Form          float64 `json:"form"`
+	Econ          float64 `json:"econ"`
+	Kit           float64 `json:"kit"`
+	DamageThreat  float64 `json:"damageThreat"`
+	Weight        float64 `json:"weight"`
+	Ignored       bool    `json:"ignored"`
+	MainTarget    bool    `json:"mainTarget"`
+	HealUtility   float64 `json:"healUtility"` // separate utility threat (enchanters)
+	LaneOpponent  bool    `json:"laneOpponent"`
 }
 
 // ComputeThreat fills form/econ/kit/weights for enemies.

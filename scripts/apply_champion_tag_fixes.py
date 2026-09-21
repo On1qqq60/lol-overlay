@@ -67,7 +67,7 @@ FIXES: dict[str, dict] = {
         "anti_dash",
         "cc_hard",
         by_role={
-            "JUNGLE": role("tank", "ad", "melee", "engage", "dive", "anti_dash", "cc_hard"),
+            "JUNGLE": role("tank", "ad", "melee", "fighter", "engage", "dive", "anti_dash", "cc_hard"),
             "TOP": role("tank", "ad", "melee", "fighter", "engage", "anti_dash", "cc_hard", "sustain"),
             "UTILITY": role("tank", "ad", "melee", "engage", "peel", "anti_dash", "cc_hard"),
         },

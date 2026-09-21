@@ -655,6 +655,136 @@ func TestLethalitySingleCore(t *testing.T) {
 	}
 }
 
+func poppyLaneSnap(position, smite string) engine.GameSnapshot {
+	self := engine.PlayerSnapshot{
+		ChampionID: "Poppy", Team: "ORDER", Position: position, Level: 1,
+		Items: []int{1054}, SpellOne: "SummonerFlash", SpellTwo: smite,
+	}
+	return engine.GameSnapshot{
+		ActiveChampionID: "Poppy",
+		ActiveTeam:       "ORDER",
+		CurrentGold:      500,
+		Players: []engine.PlayerSnapshot{
+			self,
+			{ChampionID: "Darius", Team: "CHAOS", Position: "TOP", Level: 1},
+			{ChampionID: "LeeSin", Team: "CHAOS", Position: "JUNGLE", Level: 1},
+			{ChampionID: "Ahri", Team: "CHAOS", Position: "MIDDLE", Level: 1},
+			{ChampionID: "Jinx", Team: "CHAOS", Position: "BOTTOM", Level: 1},
+			{ChampionID: "Nami", Team: "CHAOS", Position: "UTILITY", Level: 1},
+		},
+	}
+}
+
+func TestPoppySoloLaneBruiserSeed(t *testing.T) {
+	store := loadStore(t)
+	cases := []struct {
+		pos, smite, seed string
+	}{
+		{"TOP", "SummonerTeleport", "fighter"},
+		{"JUNGLE", "SummonerSmite", "fighter/jungle"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.pos, func(t *testing.T) {
+			rec := engine.Recommend(store, poppyLaneSnap(tc.pos, tc.smite))
+			if rec.SeedName != tc.seed {
+				t.Fatalf("seed want %q, got %q build=%v", tc.seed, rec.SeedName, rec.Build)
+			}
+			var iceborn, sundered, cleaver, sunfire rules.Slot
+			hasOffensive := false
+			for _, s := range rec.Build {
+				switch s.ItemID {
+				case rules.ItemIceborn:
+					iceborn = s
+				case rules.ItemSunderedSky:
+					sundered = s
+				case rules.ItemBlackCleaver:
+					cleaver = s
+				case 3068:
+					sunfire = s
+				}
+				if s.Role == "core" || s.Role == "offensive" {
+					hasOffensive = true
+				}
+			}
+			if !hasOffensive {
+				t.Fatalf("Poppy %s must not be defensive-only, build=%v", tc.pos, rec.Build)
+			}
+			if iceborn.Role != "core" {
+				t.Fatalf("Poppy %s want Iceborn core, got %+v", tc.pos, iceborn)
+			}
+			if sundered.Role != "offensive" {
+				t.Fatalf("Poppy %s want Sundered Sky offensive, got %+v", tc.pos, sundered)
+			}
+			if cleaver.Role != "offensive" {
+				t.Fatalf("Poppy %s want Cleaver offensive, got %+v", tc.pos, cleaver)
+			}
+			if sunfire.ItemID != 0 {
+				t.Fatalf("Poppy bruiser should not default Sunfire: %v", rec.Build)
+			}
+		})
+	}
+}
+
+func TestPoppySupportStaysEngage(t *testing.T) {
+	store := loadStore(t)
+	snap := engine.GameSnapshot{
+		ActiveChampionID: "Poppy",
+		ActiveTeam:       "ORDER",
+		CurrentGold:      500,
+		Players: []engine.PlayerSnapshot{
+			{ChampionID: "Poppy", Team: "ORDER", Position: "UTILITY", Level: 1, Items: []int{3865}},
+			{ChampionID: "Jinx", Team: "CHAOS", Position: "BOTTOM", Level: 1},
+			{ChampionID: "Ahri", Team: "CHAOS", Position: "MIDDLE", Level: 1},
+			{ChampionID: "LeeSin", Team: "CHAOS", Position: "JUNGLE", Level: 1},
+			{ChampionID: "Garen", Team: "CHAOS", Position: "TOP", Level: 1},
+			{ChampionID: "Nami", Team: "CHAOS", Position: "UTILITY", Level: 1},
+		},
+	}
+	rec := engine.Recommend(store, snap)
+	if rec.SeedName != "support" {
+		t.Fatalf("Poppy UTILITY want support, got %q", rec.SeedName)
+	}
+	foundLocket := false
+	for _, s := range rec.Build {
+		if s.ItemID == 3190 {
+			foundLocket = true
+		}
+		if s.ItemID == rules.ItemSunderedSky || s.ItemID == rules.ItemIceborn {
+			t.Fatalf("support Poppy should not use bruiser core: %v", rec.Build)
+		}
+	}
+	if !foundLocket {
+		t.Fatalf("support Poppy want Locket, build=%v", rec.Build)
+	}
+}
+
+func TestMalphiteStaysTankSeed(t *testing.T) {
+	store := loadStore(t)
+	snap := engine.GameSnapshot{
+		ActiveChampionID: "Malphite",
+		ActiveTeam:       "ORDER",
+		CurrentGold:      500,
+		Players: []engine.PlayerSnapshot{
+			{ChampionID: "Malphite", Team: "ORDER", Position: "TOP", Level: 1, Items: []int{1054}},
+			{ChampionID: "Darius", Team: "CHAOS", Position: "TOP", Level: 1},
+			{ChampionID: "LeeSin", Team: "CHAOS", Position: "JUNGLE", Level: 1},
+			{ChampionID: "Ahri", Team: "CHAOS", Position: "MIDDLE", Level: 1},
+			{ChampionID: "Jinx", Team: "CHAOS", Position: "BOTTOM", Level: 1},
+			{ChampionID: "Nami", Team: "CHAOS", Position: "UTILITY", Level: 1},
+		},
+	}
+	rec := engine.Recommend(store, snap)
+	if rec.SeedName != "tank" {
+		t.Fatalf("Malphite want tank seed, got %q", rec.SeedName)
+	}
+	if slotPriority(rec.Build, 3068) < 0 {
+		t.Fatalf("Malphite want Sunfire core, build=%v", rec.Build)
+	}
+	if slotPriority(rec.Build, rules.ItemSunderedSky) >= 0 {
+		t.Fatalf("true tank should not get Sundered Sky: %v", rec.Build)
+	}
+}
+
 func TestSmiteParsedFromFixture(t *testing.T) {
 	path := filepath.Join(projectRoot(t), "testdata", "generated", "live", "0002_Anivia_JUNGLE.json")
 	snap, err := liveclient.LoadFixture(path)

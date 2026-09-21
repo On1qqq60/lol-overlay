@@ -168,6 +168,10 @@ func seedByClass(primary string, allTags []string) ([]Slot, string) {
 		}
 		return SeedADBruiser(), "fighter"
 	case tags.ClassTank:
+		// Poppy-like tank/fighters: Iceborn + damage cores, not Sunfire-only tank.
+		if has(tags.ClassFighter) {
+			return SeedTankFighter(), "fighter"
+		}
 		return SeedTank(), "tank"
 	case tags.ClassSupport:
 		if has(tags.StyleHealer) || has(tags.StyleShield) {
@@ -379,6 +383,23 @@ func SeedTank() []Slot {
 		{ItemID: 3075, Name: "Thornmail", Priority: 55, Role: "defensive"},
 		{ItemID: ItemForceOfNature, Name: "Force of Nature", Priority: 54, Role: "defensive"},
 		{ItemID: ItemSpiritVisage, Name: "Spirit Visage", Priority: 52, Role: "defensive"},
+	}
+}
+
+// SeedTankFighter — Poppy/top-jungle tank-bruisers: sheen core + AD legendaries,
+// then the same resist options as SeedTank. Support Poppy stays on the engage line.
+func SeedTankFighter() []Slot {
+	return []Slot{
+		{ItemID: ItemDoransShield, Name: "Doran's Shield", Priority: 100, Role: "start"},
+		{ItemID: ItemIceborn, Name: "Iceborn Gauntlet", Priority: 82, Role: "core"},
+		{ItemID: ItemSunderedSky, Name: "Sundered Sky", Priority: 74, Role: "offensive"},
+		{ItemID: ItemBlackCleaver, Name: "Black Cleaver", Priority: 68, Role: "offensive"},
+		{ItemID: ItemSteelcaps, Name: "Plated Steelcaps", Priority: 60, Role: "boots"},
+		{ItemID: ItemMercTreads, Name: "Mercury's Treads", Priority: 58, Role: "boots"},
+		{ItemID: ItemSteraks, Name: "Sterak's Gage", Priority: 54, Role: "defensive"},
+		{ItemID: ItemForceOfNature, Name: "Force of Nature", Priority: 50, Role: "defensive"},
+		{ItemID: 3075, Name: "Thornmail", Priority: 48, Role: "defensive"},
+		{ItemID: ItemSpiritVisage, Name: "Spirit Visage", Priority: 46, Role: "defensive"},
 	}
 }
 

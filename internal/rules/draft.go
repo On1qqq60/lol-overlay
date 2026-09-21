@@ -54,10 +54,10 @@ const (
 
 // Slot is one step in a recommended build path.
 type Slot struct {
-	ItemID   int
-	Name     string
-	Priority float64
-	Role     string // start, component, core, boots, defensive, offensive, pen, utility
+	ItemID   int     `json:"itemId"`
+	Name     string  `json:"name"`
+	Priority float64 `json:"priority"`
+	Role     string  `json:"role"` // start, component, core, boots, defensive, offensive, pen, utility
 }
 
 // DraftSignals are weighted 0..1 team aggregates from champion tags (pre-items).
