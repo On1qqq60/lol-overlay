@@ -128,7 +128,7 @@ func curatedOverrides() map[string]tags.ChampionProfile {
 		ByRole: map[string]tags.RoleOverride{
 			"UTILITY": role(tags.ClassTank, tags.RangeMelee, tags.StyleEngage, tags.StylePeel, tags.ExtraAntiDash, tags.ThreatCCHard),
 			"TOP":     role(tags.ClassTank, tags.ClassFighter, tags.RangeMelee, tags.StyleEngage, tags.ExtraAntiDash, tags.ThreatCCHard, tags.ThreatSustain),
-			"JUNGLE":  role(tags.ClassTank, tags.RangeMelee, tags.StyleEngage, tags.ThreatDive, tags.ExtraAntiDash, tags.ThreatCCHard),
+			"JUNGLE":  role(tags.ClassTank, tags.ClassFighter, tags.DamageAD, tags.RangeMelee, tags.StyleEngage, tags.ThreatDive, tags.ExtraAntiDash, tags.ThreatCCHard),
 		},
 	}
 	out["Sett"] = tags.ChampionProfile{

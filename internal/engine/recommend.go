@@ -12,21 +12,21 @@ import (
 
 // Recommendation is the engine output for one snapshot.
 type Recommendation struct {
-	Build       []rules.Slot
-	NextItem    rules.Slot
-	HasNext     bool
-	TopThreats  []ThreatRow
-	Pressure    Pressure
-	Reasons     []string
-	Profiles    []EnemyProfile
-	Threats     []ThreatRow
-	OwnedItems  []int
-	DraftScale  float64
-	LiveScale   float64
-	AllyFront   float64
-	CurrentGold int
-	SeedName    string
-	Offrole     bool // active champ outside NaturalPositions for their tags
+	Build       []rules.Slot   `json:"build"`
+	NextItem    rules.Slot     `json:"nextItem"`
+	HasNext     bool           `json:"hasNext"`
+	TopThreats  []ThreatRow    `json:"topThreats"`
+	Pressure    Pressure       `json:"pressure"`
+	Reasons     []string       `json:"reasons"`
+	Profiles    []EnemyProfile `json:"profiles"`
+	Threats     []ThreatRow    `json:"threats"`
+	OwnedItems  []int          `json:"ownedItems"`
+	DraftScale  float64        `json:"draftScale"`
+	LiveScale   float64        `json:"liveScale"`
+	AllyFront   float64        `json:"allyFront"`
+	CurrentGold int            `json:"currentGold"`
+	SeedName    string         `json:"seedName"`
+	Offrole     bool           `json:"offrole"` // active champ outside NaturalPositions for their tags
 }
 
 // Recommend runs seed → draft/live adjust → next unfinished item.
