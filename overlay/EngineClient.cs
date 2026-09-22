@@ -179,11 +179,27 @@ namespace LolBuildOverlay
         {
             if (rec == null || rec.build == null || rec.build.Length == 0) return null;
 
-            string nextId = null;
-            if (rec.hasNext && rec.nextItem != null && rec.nextItem.itemId > 0)
-                nextId = rec.nextItem.itemId.ToString();
+            var owned = new HashSet<string>();
+            if (rec.ownedItems != null)
+            {
+                for (var i = 0; i < rec.ownedItems.Length; i++)
+                {
+                    if (rec.ownedItems[i] > 0)
+                        owned.Add(rec.ownedItems[i].ToString());
+                }
+            }
 
-            var items = new List<string>();
+            string nextId = null;
+            string nextRole = "";
+            if (rec.hasNext && rec.nextItem != null && rec.nextItem.itemId > 0)
+            {
+                nextId = rec.nextItem.itemId.ToString();
+                nextRole = rec.nextItem.role ?? "";
+            }
+
+            var startId = "";
+            var have = new List<string>();
+            var rest = new List<string>();
             string boots = null;
 
             foreach (var s in rec.build)
@@ -193,28 +209,58 @@ namespace LolBuildOverlay
                 var role = s.role ?? "";
                 if (role == "boots")
                 {
-                    if (boots == null || id == nextId) boots = id;
+                    if (owned.Contains(id) || boots == null || id == nextId) boots = id;
                     continue;
                 }
-                if (role == "component" && id != nextId) continue;
-                if (role == "start" && id != nextId) continue;
-                if (items.Count < 5) items.Add(id);
+                if (role == "component") continue;
+                if (role == "start")
+                {
+                    if (!owned.Contains(id) && string.IsNullOrEmpty(startId))
+                        startId = id;
+                    continue;
+                }
+                if (have.Contains(id) || rest.Contains(id)) continue;
+                if (owned.Contains(id)) have.Add(id);
+                else rest.Add(id);
             }
 
-            if (nextId != null && nextId != boots && !items.Contains(nextId))
+            var items = new List<string>();
+            if (!string.IsNullOrEmpty(startId))
+                items.Add(startId);
+            foreach (var id in have)
             {
-                items.Insert(0, nextId);
-                while (items.Count > 5) items.RemoveAt(items.Count - 1);
+                if (items.Count >= 5) break;
+                items.Add(id);
             }
-
+            foreach (var id in rest)
+            {
+                if (items.Count >= 5) break;
+                items.Add(id);
+            }
             while (items.Count < 5) items.Add(items.Count > 0 ? items[items.Count - 1] : "1055");
             if (string.IsNullOrEmpty(boots)) boots = "3006";
 
+            var highlight = nextId;
+            if (nextRole == "component" || nextRole == "start")
+            {
+                var parent = ParentLegendary(nextId, items);
+                if (parent != null) highlight = parent;
+            }
+
             var nextIndex = 0;
-            if (nextId == boots) nextIndex = 5;
+            if (nextId == boots || highlight == boots) nextIndex = 5;
             else
             {
-                var i = items.IndexOf(nextId);
+                var i = -1;
+                if (!string.IsNullOrEmpty(highlight)) i = items.IndexOf(highlight);
+                if (i < 0 && nextId != null) i = items.IndexOf(nextId);
+                if (i < 0)
+                {
+                    for (var n = 0; n < items.Count; n++)
+                    {
+                        if (!owned.Contains(items[n])) { i = n; break; }
+                    }
+                }
                 if (i >= 0) nextIndex = i;
             }
 
@@ -224,6 +270,47 @@ namespace LolBuildOverlay
                 Boots = boots,
                 NextIndex = nextIndex
             };
+        }
+
+        // component id → legendaries it builds into (first match in the row wins).
+        private static readonly Dictionary<string, string[]> CraftsInto = new Dictionary<string, string[]>
+        {
+            {"1043", new[]{"3115","3153"}},
+            {"1053", new[]{"3153","3072"}},
+            {"1038", new[]{"3031","3032","3072"}},
+            {"3144", new[]{"3153","3032"}},
+            {"1052", new[]{"3115"}},
+            {"1026", new[]{"3100","3165","3089","4645","3135"}},
+            {"1058", new[]{"3089","4645","3157","3102"}},
+            {"3802", new[]{"3118","6655","2503","6657"}},
+            {"3108", new[]{"3118"}},
+            {"3147", new[]{"6653"}},
+            {"2508", new[]{"6653","2503"}},
+            {"3134", new[]{"3142","6701","6692"}},
+            {"3057", new[]{"3100","3078","6662"}},
+            {"6670", new[]{"6672"}},
+            {"1038", new[]{"3031"}},
+            {"3145", new[]{"4646","3152"}},
+            {"3113", new[]{"3100","4646"}},
+            {"2420", new[]{"3157"}},
+            {"3916", new[]{"3165"}},
+            {"1033", new[]{"3102"}},
+            {"3133", new[]{"6610","3071"}}
+        };
+
+        private static string ParentLegendary(string componentId, List<string> row)
+        {
+            string[] parents;
+            if (string.IsNullOrEmpty(componentId) || !CraftsInto.TryGetValue(componentId, out parents))
+                return null;
+            for (var i = 0; i < row.Count; i++)
+            {
+                for (var j = 0; j < parents.Length; j++)
+                {
+                    if (row[i] == parents[j]) return row[i];
+                }
+            }
+            return null;
         }
 
         private static EngineResult Fail(string error)

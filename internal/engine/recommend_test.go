@@ -373,8 +373,8 @@ func TestRemapRussianNamesAkaliSeed(t *testing.T) {
 		},
 	}
 	rec := engine.Recommend(store, snap)
-	if rec.SeedName != "assassin" && rec.SeedName != "assassin/ap" {
-		t.Fatalf("Akali seed want assassin or assassin/ap, got %q next=%v reasons=%v", rec.SeedName, rec.NextItem, rec.Reasons)
+	if rec.SeedName != "assassin/ap" {
+		t.Fatalf("Akali seed want assassin/ap, got %q next=%v reasons=%v", rec.SeedName, rec.NextItem, rec.Reasons)
 	}
 	active, ok := engine.RemapChampionIDs(store, snap).ActivePlayer()
 	if !ok || active.ChampionID != "Akali" {
@@ -384,18 +384,18 @@ func TestRemapRussianNamesAkaliSeed(t *testing.T) {
 		t.Fatalf("should not recommend Doran's Blade for Akali, got %+v seed=%s", rec.NextItem, rec.SeedName)
 	}
 	start := rec.Build[0].ItemID
-	if start != rules.ItemDarkSeal && start != rules.ItemDoransRing && start != rules.ItemStormsurge {
-		t.Fatalf("expected Dark Seal / Stormsurge path start, got %+v", rec.Build[0])
+	if start != rules.ItemDoransRing && start != rules.ItemDarkSeal {
+		t.Fatalf("expected Doran's Ring / Dark Seal start, got %+v", rec.Build[0])
 	}
-	foundStorm := false
+	foundLich := false
 	for _, s := range rec.Build {
-		if s.ItemID == rules.ItemStormsurge {
-			foundStorm = true
+		if s.ItemID == rules.ItemLichBane {
+			foundLich = true
 			break
 		}
 	}
-	if !foundStorm {
-		t.Fatalf("Akali AP assassin seed should include Stormsurge, build=%v", rec.Build)
+	if !foundLich {
+		t.Fatalf("Akali seed should include Lich Bane, build=%v", rec.Build)
 	}
 	if rec.Pressure.APBurst <= 0 {
 		t.Fatalf("Veigar should contribute apBurst, pressure=%+v", rec.Pressure)
@@ -679,9 +679,10 @@ func TestPoppySoloLaneBruiserSeed(t *testing.T) {
 	store := loadStore(t)
 	cases := []struct {
 		pos, smite, seed string
+		wantIceborn      bool
 	}{
-		{"TOP", "SummonerTeleport", "fighter"},
-		{"JUNGLE", "SummonerSmite", "fighter/jungle"},
+		{"TOP", "SummonerTeleport", "fighter", true},
+		{"JUNGLE", "SummonerSmite", "tank/jungle", false},
 	}
 	for _, tc := range cases {
 		t.Run(tc.pos, func(t *testing.T) {
@@ -708,6 +709,9 @@ func TestPoppySoloLaneBruiserSeed(t *testing.T) {
 			}
 			if !hasOffensive {
 				t.Fatalf("Poppy %s must not be defensive-only, build=%v", tc.pos, rec.Build)
+			}
+			if !tc.wantIceborn {
+				return
 			}
 			if iceborn.Role != "core" {
 				t.Fatalf("Poppy %s want Iceborn core, got %+v", tc.pos, iceborn)
@@ -804,3 +808,208 @@ func TestSmiteParsedFromFixture(t *testing.T) {
 		t.Fatalf("seed=%q", rec.SeedName)
 	}
 }
+
+func TestKayleSeedIsNashorNotKraken(t *testing.T) {
+	seed, name := rules.SeedForContext(rules.SeedContext{
+		Primary:    tags.ClassMarksman,
+		Tags:       []string{"dps", "hybrid", "ranged", "sustain"},
+		ChampionID: "Kayle",
+		Position:   "MIDDLE",
+	})
+	if name != "marksman" {
+		t.Fatalf("seed name=%q", name)
+	}
+	hasNashor, hasKraken, hasIE, hasRift := false, false, false, false
+	for _, s := range seed {
+		switch s.ItemID {
+		case rules.ItemNashors:
+			hasNashor = true
+		case rules.ItemKraken:
+			hasKraken = true
+		case rules.ItemInfinityEdge:
+			hasIE = true
+		case rules.ItemRiftmaker:
+			hasRift = true
+		}
+	}
+	if !hasNashor || hasKraken || hasIE {
+		t.Fatalf("Kayle must be Nashor not ADC crit: nashor=%v kraken=%v ie=%v", hasNashor, hasKraken, hasIE)
+	}
+	if hasRift {
+		t.Fatal("Kayle default seed must not force Riftmaker; it is a tank-pressure option")
+	}
+	if slotPriority(seed, rules.ItemZhonyas) >= 0 {
+		t.Fatal("Kayle R is invuln — Zhonya must not be in the seed")
+	}
+}
+
+func TestYoneSeedIsBotrkCritNotTrinity(t *testing.T) {
+	seed, name := rules.SeedForContext(rules.SeedContext{
+		Primary:    tags.ClassFighter,
+		Tags:       []string{"ad", "melee", "dps", "dive", "mobility"},
+		ChampionID: "Yone",
+		Position:   "TOP",
+	})
+	if name != "fighter" {
+		t.Fatalf("seed name=%q", name)
+	}
+	hasBotrk, hasIE, hasYun, hasTri := false, false, false, false
+	for _, s := range seed {
+		switch s.ItemID {
+		case rules.ItemBOTRK:
+			hasBotrk = true
+		case rules.ItemInfinityEdge:
+			hasIE = true
+		case rules.ItemYunTal:
+			hasYun = true
+		case rules.ItemTrinity:
+			hasTri = true
+		}
+	}
+	if !hasBotrk || !hasIE || !hasYun || hasTri {
+		t.Fatalf("Yone must be BotRK/IE/Yun Tal not Trinity: botrk=%v ie=%v yun=%v trinity=%v", hasBotrk, hasIE, hasYun, hasTri)
+	}
+}
+
+func TestAkaliSeedLichBaneShadowflameZhonya(t *testing.T) {
+	seed, name := rules.SeedForContext(rules.SeedContext{
+		Primary:    tags.ClassAssassin,
+		Tags:       []string{"ap", "melee", "burst", "dive", "mobility"},
+		ChampionID: "Akali",
+		Position:   "MIDDLE",
+	})
+	if name != "assassin/ap" {
+		t.Fatalf("seed name=%q", name)
+	}
+	var start, lich, shadow, zhonya, storm, malign float64
+	start, lich, shadow, zhonya, storm, malign = -999, -999, -999, -999, -999, -999
+	for _, s := range seed {
+		switch s.ItemID {
+		case rules.ItemDoransRing:
+			start = s.Priority
+		case rules.ItemLichBane:
+			lich = s.Priority
+		case rules.ItemShadowflame:
+			shadow = s.Priority
+		case rules.ItemZhonyas:
+			zhonya = s.Priority
+		case rules.ItemStormsurge:
+			storm = s.Priority
+		case rules.ItemMalignance:
+			malign = s.Priority
+		}
+	}
+	if start < 0 {
+		t.Fatalf("Akali must start Doran's Ring, seed=%v", seed)
+	}
+	if lich < 0 || shadow < 0 || zhonya < 0 {
+		t.Fatalf("missing Lich Bane/Shadowflame/Zhonya: %v", seed)
+	}
+	if malign > 0 {
+		t.Fatalf("Akali must not be Malignance mana path: %v", seed)
+	}
+	if storm > 0 {
+		t.Fatalf("Akali default is Lich Bane not Stormsurge: %v", seed)
+	}
+	if !(lich > shadow && shadow > zhonya) {
+		t.Fatalf("want Lich Bane → Shadowflame → Zhonya, got lich=%.0f shadow=%.0f zhonya=%.0f", lich, shadow, zhonya)
+	}
+}
+
+func TestSustainAndVampRaiseHealUtilNotShields(t *testing.T) {
+	store := loadStore(t)
+	enemies := []engine.PlayerSnapshot{
+		{ChampionID: "Sion", Team: "CHAOS", Position: "TOP", Level: 6, Items: []int{3084, 3047}},
+		{ChampionID: "Pantheon", Team: "CHAOS", Position: "MIDDLE", Level: 6, Items: []int{3078, 3153}},
+		{ChampionID: "Morgana", Team: "CHAOS", Position: "UTILITY", Level: 6, Items: []int{6653}},
+	}
+	profiles := engine.BuildProfiles(enemies, store.ChampionTags, store.Items)
+	rows := engine.ComputeThreat(profiles, store.Items.LegendaryCount, 6, "TOP")
+	var sion, panth, morg float64
+	for _, r := range rows {
+		switch r.ChampionID {
+		case "Sion":
+			sion = r.HealUtility
+		case "Pantheon":
+			panth = r.HealUtility
+		case "Morgana":
+			morg = r.HealUtility
+		}
+	}
+	if sion < 0.08 {
+		t.Fatalf("Sion sustain should raise heal, got %.3f", sion)
+	}
+	if panth < 0.08 {
+		t.Fatalf("Pantheon BotRK should raise heal, got %.3f", panth)
+	}
+	if morg > 0.02 {
+		t.Fatalf("Morgana shield must not count as heal, got %.3f", morg)
+	}
+}
+
+func TestYoneMortalVsSionPantheonBotrk(t *testing.T) {
+	store := loadStore(t)
+	snap := engine.GameSnapshot{
+		ActiveChampionID: "Yone",
+		ActiveTeam:       "ORDER",
+		CurrentGold:      469,
+		Players: []engine.PlayerSnapshot{
+			{ChampionID: "Yone", Team: "ORDER", Position: "TOP", Level: 6, Items: []int{3153, 1055}},
+			{ChampionID: "Sion", Team: "CHAOS", Position: "TOP", Level: 6, Items: []int{3084, 3047}},
+			{ChampionID: "Pantheon", Team: "CHAOS", Position: "MIDDLE", Level: 6, Items: []int{3078, 3153}},
+			{ChampionID: "Malzahar", Team: "CHAOS", Position: "JUNGLE", Level: 5, Items: []int{6653}},
+			{ChampionID: "Kalista", Team: "CHAOS", Position: "BOTTOM", Level: 6, Items: []int{3153}},
+			{ChampionID: "Morgana", Team: "CHAOS", Position: "UTILITY", Level: 5, Items: []int{6653}},
+		},
+	}
+	rec := engine.Recommend(store, snap)
+	if rec.Pressure.HealUtil <= 0.12 {
+		t.Fatalf("Sion+Pantheon BotRK+Kalista BotRK should raise healUtil, got %.3f reasons=%v", rec.Pressure.HealUtil, rec.Reasons)
+	}
+	mortal := slotPriority(rec.Build, rules.ItemMortalReminder)
+	if mortal < 52 {
+		t.Fatalf("Mortal Reminder should be bumped vs sustain/vamp, got %.1f reasons=%v", mortal, rec.Reasons)
+	}
+	for _, s := range rec.Build {
+		if s.ItemID == rules.ItemMorellonomicon {
+			t.Fatalf("AD Yone must not get Morello: %v", rec.Build)
+		}
+	}
+	found := false
+	for _, r := range rec.Reasons {
+		if strings.Contains(r, "Mortal Reminder") || strings.Contains(r, "heal/sustain") || strings.Contains(r, "heal_utility") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Fatalf("expected heal/sustain grievous reason, got %v", rec.Reasons)
+	}
+}
+
+func TestYoneNoMortalBumpFromMorganaShield(t *testing.T) {
+	store := loadStore(t)
+	snap := engine.GameSnapshot{
+		ActiveChampionID: "Yone",
+		ActiveTeam:       "ORDER",
+		CurrentGold:      469,
+		Players: []engine.PlayerSnapshot{
+			{ChampionID: "Yone", Team: "ORDER", Position: "TOP", Level: 1, Items: []int{1055}},
+			{ChampionID: "Sivir", Team: "CHAOS", Position: "BOTTOM", Level: 1, Items: []int{}},
+			{ChampionID: "Malzahar", Team: "CHAOS", Position: "MIDDLE", Level: 1, Items: []int{}},
+			{ChampionID: "MonkeyKing", Team: "CHAOS", Position: "JUNGLE", Level: 1, Items: []int{}},
+			{ChampionID: "Gnar", Team: "CHAOS", Position: "TOP", Level: 1, Items: []int{}},
+			{ChampionID: "Morgana", Team: "CHAOS", Position: "UTILITY", Level: 1, Items: []int{}},
+		},
+	}
+	rec := engine.Recommend(store, snap)
+	if rec.Pressure.HealUtil > 0.12 {
+		t.Fatalf("Morgana shield lobby must not raise healUtil, got %.3f", rec.Pressure.HealUtil)
+	}
+	for _, r := range rec.Reasons {
+		if strings.Contains(r, "Mortal Reminder") || strings.Contains(r, "Executioner's") || strings.Contains(r, "Morello") {
+			t.Fatalf("shield-only Morgana must not trigger grievous: %q", r)
+		}
+	}
+}
+

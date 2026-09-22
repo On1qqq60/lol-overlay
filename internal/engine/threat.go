@@ -22,7 +22,7 @@ type ThreatRow struct {
 	Weight        float64 `json:"weight"`
 	Ignored       bool    `json:"ignored"`
 	MainTarget    bool    `json:"mainTarget"`
-	HealUtility   float64 `json:"healUtility"` // separate utility threat (enchanters)
+	HealUtility   float64 `json:"healUtility"` // healers, sustain kits, vamp items — not shields
 	LaneOpponent  bool    `json:"laneOpponent"`
 }
 
@@ -58,18 +58,7 @@ func ComputeThreat(profiles []EnemyProfile, itemsLegendaryCount func([]int) int,
 			threat = 0
 		}
 
-		healUtil := 0.0
-		// Grievous tracks healers only — shield supports (Morgana) are not heal pressure.
-		if profileHas(p.ProfileTags, tags.StyleHealer) || p.Base.Has(tags.StyleHealer) {
-			healNow := 0.4*form + 0.6*econ
-			if form < 0.05 {
-				healNow *= form * 20
-			}
-			healUtil = kit * healNow * levelFactor
-			if p.Player.IsDead {
-				healUtil = 0
-			}
-		}
+		healUtil := healUtilityFor(p, form, econ, kit, levelFactor)
 
 		rows[i] = ThreatRow{
 			ChampionID:   p.Player.ChampionID,
@@ -123,6 +112,57 @@ func ComputeThreat(profiles []EnemyProfile, itemsLegendaryCount func([]int) int,
 		rows[i].MainTarget = w > weightMain
 	}
 	return rows
+}
+
+// healUtilityFor is grievous pressure: dedicated healers, kit sustain (Sion),
+// and vamp/lifesteal items (BotRK / BT). Shield-only kits (Morgana) stay at 0.
+func healUtilityFor(p EnemyProfile, form, econ, kit, levelFactor float64) float64 {
+	kitMul := kitHealMul(p)
+	vamp := vampItemScore(p.Player.Items)
+	if kitMul <= 0 && vamp <= 0 {
+		return 0
+	}
+	// Presence floor: even 0/0 Sion with Heartsteel still heals on W.
+	// Damage threat still zeros feeders; heal does not.
+	healNow := 0.35*form + 0.45*econ + 0.20
+	heal := (kitMul*kit + vamp) * healNow * levelFactor
+	if p.Player.IsDead {
+		return 0
+	}
+	return heal
+}
+
+func kitHealMul(p EnemyProfile) float64 {
+	if profileHas(p.ProfileTags, tags.StyleHealer) || p.Base.Has(tags.StyleHealer) {
+		return 1
+	}
+	// Kit sustain only — HP items also stamp ThreatSustain on the live profile
+	// (Liandry Morgana) and must not count as grievous pressure.
+	if p.Base.Has(tags.ThreatSustain) {
+		return 0.55
+	}
+	return 0
+}
+
+func vampItemScore(items []int) float64 {
+	s := 0.0
+	for _, id := range items {
+		switch id {
+		case 3153, 3072: // BotRK, Bloodthirster
+			s += 0.55
+		case 3074, 4633: // Ravenous Hydra, Riftmaker
+			s += 0.40
+		case 6610: // Sundered Sky
+			s += 0.35
+		case 6333, 3083: // Death's Dance, Warmogs
+			s += 0.25
+		case 3065: // Spirit Visage
+			s += 0.20
+		case 3144, 1053: // Cutlass, Vampiric Scepter
+			s += 0.15
+		}
+	}
+	return clamp(s, 0, 1)
 }
 
 func formScore(kills, deaths, assists int) float64 {

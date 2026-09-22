@@ -4,18 +4,18 @@ import "lol-build-overlay/internal/tags"
 
 // Jungle pet / support start IDs.
 const (
-	ItemJungleScorchclaw  = 1101
-	ItemJungleGustwalker  = 1102
-	ItemJungleMosstomper  = 1103
-	ItemWorldAtlas        = 3865
-	ItemRapidFirecannon   = 3094
-	ItemCollector         = 6676
-	ItemLordDominiks      = 3036
-	ItemHubris            = 6697
-	ItemForceOfNature     = 4401
-	ItemSeryldas          = 6694
-	ItemAxiomArc          = 6696
-	ItemIonians           = 3158
+	ItemJungleScorchclaw = 1101
+	ItemJungleGustwalker = 1102
+	ItemJungleMosstomper = 1103
+	ItemWorldAtlas       = 3865
+	ItemRapidFirecannon  = 3094
+	ItemCollector        = 6676
+	ItemLordDominiks     = 3036
+	ItemHubris           = 6697
+	ItemForceOfNature    = 4401
+	ItemSeryldas         = 6694
+	ItemAxiomArc         = 6696
+	ItemIonians          = 3158
 )
 
 // SeedContext carries role/loadout signals the class template alone cannot see.
@@ -36,31 +36,33 @@ func SeedForPlayer(primary string, allTags []string) []Slot {
 
 // SeedForContext returns the build seed and a seed label (e.g. "mage/jungle", "assassin/ap").
 func SeedForContext(ctx SeedContext) ([]Slot, string) {
+	seed, label := seedForContextRaw(ctx)
+	return ApplyItemGates(ctx.ChampionID, seed), label
+}
+
+func seedForContextRaw(ctx SeedContext) ([]Slot, string) {
+	pos := tags.NormalizePosition(ctx.Position)
+	champ := ctx.ChampionID
 	primary := ctx.Primary
 	allTags := ctx.Tags
-	pos := tags.NormalizePosition(ctx.Position)
 
-	// UTILITY → support line unless carry-support exception (Senna/Pyke-like).
-	if pos == "UTILITY" && !isSupportCarryException(ctx.ChampionID) {
-		seed := supportSeedFor(primary, allTags)
-		return seed, "support"
+	var fam string
+	if pos == "UTILITY" {
+		fam = supportFamilyFor(champ, primary, allTags)
+	} else {
+		fam, _ = resolveFamily(champ, pos, primary, allTags)
 	}
+	fam = CommitFamily(fam, champ, ctx.Items)
+	label := familyLabel(fam)
 
-	// Solo lane / jungle: never keep pure enchanter/Atlas seed for ClassSupport.
-	if primary == tags.ClassSupport && pos != "UTILITY" {
-		seed, label := soloLaneSupportSeed(allTags)
-		if pos == "JUNGLE" || ctx.HasSmite || HasJunglePet(ctx.Items) {
-			seed = applyJungleStart(seed, firstLabelPart(label), allTags)
-			return seed, label + "/jungle"
-		}
-		return seed, label
-	}
-
-	seed, label := seedByClass(primary, allTags)
+	seed := seedByFamily(fam)
+	seed = DropSkippedFirstCores(seed, ctx.Items)
+	seed = BoostCrafted(seed, ctx.Items)
+	seed = DropOrDemoteTearLine(seed, ctx.Items, champ, pos)
 
 	jungle := pos == "JUNGLE" || ctx.HasSmite || HasJunglePet(ctx.Items)
-	if jungle {
-		seed = applyJungleStart(seed, primary, allTags)
+	if jungle && pos != "UTILITY" {
+		seed = applyJungleStart(seed, champ, fam, primary, allTags)
 		label = label + "/jungle"
 	}
 	return seed, label
@@ -97,6 +99,36 @@ func soloLaneSupportSeed(allTags []string) ([]Slot, string) {
 		return SeedAPMidBurst(), "mage"
 	}
 	return SeedTank(), "tank"
+}
+
+func skipsZhonya(champID string) bool {
+	// Ult/passive already saves them: invuln, stasis, undying, or revive.
+	// Hourglass is a duplicate panic button.
+	switch champID {
+	case "Kayle", "Tryndamere", "Kindred", "Zilean", "Taric",
+		"Lissandra", "Bard", "Xayah", "Anivia", "Zac", "Pantheon":
+		return true
+	default:
+		return false
+	}
+}
+
+func windCritChamp(champID string) bool {
+	switch champID {
+	case "Yone", "Yasuo":
+		return true
+	default:
+		return false
+	}
+}
+
+func nashorOnHitChamp(champID string) bool {
+	switch champID {
+	case "Kayle", "Azir", "Gwen":
+		return true
+	default:
+		return false
+	}
 }
 
 func isSupportCarryException(champID string) bool {
@@ -232,8 +264,8 @@ func junglePetFor(primary string, allTags []string) (int, string) {
 	}
 }
 
-func applyJungleStart(seed []Slot, primary string, allTags []string) []Slot {
-	petID, petName := junglePetFor(primary, allTags)
+func applyJungleStart(seed []Slot, champ, family, primary string, allTags []string) []Slot {
+	petID, petName := junglePetForChamp(champ, family, primary, allTags)
 	out := make([]Slot, 0, len(seed)+1)
 	replaced := false
 	for _, s := range seed {
@@ -285,19 +317,34 @@ func SeedAPPoke() []Slot {
 	}
 }
 
-func SeedAPAssassin() []Slot {
-	// Energy assassins (Akali/Diana/Ekko…): no Lost Chapter / mana mythics.
-	// Burst electrocute path ≈ Stormsurge → Sorcs → Zhonya → Shadowflame → Deathcap → Void|Banshee.
-	// Core priorities stay above typical defensive live bumps so unfinished Stormsurge isn't skipped.
+// SeedAkali — u.gg core: Lich Bane → Shadowflame → Zhonya, Sorcs, Ring.
+func SeedAkali() []Slot {
 	return []Slot{
-		{ItemID: ItemDarkSeal, Name: "Dark Seal", Priority: 105, Role: "start"},
-		{ItemID: ItemStormsurge, Name: "Stormsurge", Priority: 100, Role: "core"},
-		{ItemID: ItemSorcs, Name: "Sorcerer's Shoes", Priority: 86, Role: "boots"},
-		{ItemID: ItemZhonyas, Name: "Zhonya's Hourglass", Priority: 74, Role: "defensive"},
-		{ItemID: ItemShadowflame, Name: "Shadowflame", Priority: 66, Role: "offensive"},
-		{ItemID: ItemRabadons, Name: "Rabadon's Deathcap", Priority: 54, Role: "offensive"},
-		{ItemID: ItemVoidStaff, Name: "Void Staff", Priority: 46, Role: "pen"},
+		{ItemID: ItemDoransRing, Name: "Doran's Ring", Priority: 100, Role: "start"},
+		{ItemID: ItemLichBane, Name: "Lich Bane", Priority: 88, Role: "core"},
+		{ItemID: ItemSorcs, Name: "Sorcerer's Shoes", Priority: 80, Role: "boots"},
+		{ItemID: ItemShadowflame, Name: "Shadowflame", Priority: 72, Role: "offensive"},
+		{ItemID: ItemZhonyas, Name: "Zhonya's Hourglass", Priority: 64, Role: "defensive"},
+		{ItemID: ItemRabadons, Name: "Rabadon's Deathcap", Priority: 56, Role: "offensive"},
+		{ItemID: ItemVoidStaff, Name: "Void Staff", Priority: 48, Role: "pen"},
 		{ItemID: ItemBansheeVeil, Name: "Banshee's Veil", Priority: 44, Role: "defensive"},
+		{ItemID: ItemMercTreads, Name: "Mercury's Treads", Priority: 50, Role: "boots"},
+	}
+}
+
+func SeedAPAssassin() []Slot {
+	// Energy assassins (Diana/Ekko/Fizz/Evelynn): no Lost Chapter / mana mythics.
+	// Electrocute path ≈ Ring → Stormsurge → Shadowflame → Zhonya → Deathcap → Void.
+	return []Slot{
+		{ItemID: ItemDoransRing, Name: "Doran's Ring", Priority: 100, Role: "start"},
+		{ItemID: ItemStormsurge, Name: "Stormsurge", Priority: 88, Role: "core"},
+		{ItemID: ItemSorcs, Name: "Sorcerer's Shoes", Priority: 80, Role: "boots"},
+		{ItemID: ItemShadowflame, Name: "Shadowflame", Priority: 72, Role: "offensive"},
+		{ItemID: ItemZhonyas, Name: "Zhonya's Hourglass", Priority: 64, Role: "defensive"},
+		{ItemID: ItemRabadons, Name: "Rabadon's Deathcap", Priority: 56, Role: "offensive"},
+		{ItemID: ItemVoidStaff, Name: "Void Staff", Priority: 48, Role: "pen"},
+		{ItemID: ItemBansheeVeil, Name: "Banshee's Veil", Priority: 44, Role: "defensive"},
+		{ItemID: ItemMercTreads, Name: "Mercury's Treads", Priority: 50, Role: "boots"},
 	}
 }
 
@@ -318,6 +365,56 @@ func SeedADAssassin() []Slot {
 }
 
 func ItemEdgeOfNight() int { return 3814 }
+
+// SeedNashorOnHit — Kayle/Azir: Recurve → Nashor → Shadowflame/Deathcap.
+// Riftmaker is not a default #2; AdjustByPressure adds it when live tank/HP is real.
+func SeedNashorOnHit() []Slot {
+	return []Slot{
+		{ItemID: ItemDoransRing, Name: "Doran's Ring", Priority: 100, Role: "start"},
+		{ItemID: ItemRecurveBow, Name: "Recurve Bow", Priority: 90, Role: "component"},
+		{ItemID: ItemNashors, Name: "Nashor's Tooth", Priority: 82, Role: "core"},
+		{ItemID: ItemBerserkers, Name: "Berserker's Greaves", Priority: 74, Role: "boots"},
+		{ItemID: ItemShadowflame, Name: "Shadowflame", Priority: 66, Role: "offensive"},
+		{ItemID: ItemRabadons, Name: "Rabadon's Deathcap", Priority: 60, Role: "offensive"},
+		{ItemID: ItemZhonyas, Name: "Zhonya's Hourglass", Priority: 52, Role: "defensive"},
+		{ItemID: ItemVoidStaff, Name: "Void Staff", Priority: 44, Role: "pen"},
+	}
+}
+
+// SeedGwenNashor — Gwen's second core is Riftmaker, not Shadowflame burst.
+func SeedGwenNashor() []Slot {
+	return []Slot{
+		{ItemID: ItemDoransRing, Name: "Doran's Ring", Priority: 100, Role: "start"},
+		{ItemID: ItemRecurveBow, Name: "Recurve Bow", Priority: 90, Role: "component"},
+		{ItemID: ItemNashors, Name: "Nashor's Tooth", Priority: 82, Role: "core"},
+		{ItemID: ItemMercTreads, Name: "Mercury's Treads", Priority: 74, Role: "boots"},
+		{ItemID: ItemRiftmaker, Name: "Riftmaker", Priority: 70, Role: "offensive"},
+		{ItemID: ItemRabadons, Name: "Rabadon's Deathcap", Priority: 58, Role: "offensive"},
+		{ItemID: ItemZhonyas, Name: "Zhonya's Hourglass", Priority: 52, Role: "defensive"},
+		{ItemID: ItemShadowflame, Name: "Shadowflame", Priority: 48, Role: "offensive"},
+		{ItemID: ItemVoidStaff, Name: "Void Staff", Priority: 42, Role: "pen"},
+	}
+}
+
+// SeedWindCrit — Yone/Yasuo: BotRK → Berserkers → IE → Yun Tal, then DD / BT.
+func SeedWindCrit() []Slot {
+	return []Slot{
+		{ItemID: ItemDoransShield, Name: "Doran's Shield", Priority: 100, Role: "start"},
+		{ItemID: ItemRecurveBow, Name: "Recurve Bow", Priority: 90, Role: "component"},
+		{ItemID: ItemBOTRK, Name: "Blade of The Ruined King", Priority: 88, Role: "core"},
+		{ItemID: ItemBerserkers, Name: "Berserker's Greaves", Priority: 80, Role: "boots"},
+		{ItemID: ItemInfinityEdge, Name: "Infinity Edge", Priority: 72, Role: "offensive"},
+		{ItemID: ItemYunTal, Name: "Yun Tal Wildarrows", Priority: 66, Role: "offensive"},
+		{ItemID: ItemDeathsDance, Name: "Death's Dance", Priority: 58, Role: "defensive"},
+		{ItemID: ItemBloodthirster, Name: "Bloodthirster", Priority: 54, Role: "offensive"},
+		{ItemID: ItemSteelcaps, Name: "Plated Steelcaps", Priority: 52, Role: "boots"},
+		{ItemID: ItemMercTreads, Name: "Mercury's Treads", Priority: 50, Role: "boots"},
+		{ItemID: ItemLordDominiks, Name: "Lord Dominik's Regards", Priority: 48, Role: "pen"},
+		{ItemID: ItemMortalReminder, Name: "Mortal Reminder", Priority: 46, Role: "utility"},
+		{ItemID: ItemWitsEnd, Name: "Wit's End", Priority: 44, Role: "defensive"},
+		{ItemID: ItemGuardianAngel, Name: "Guardian Angel", Priority: 40, Role: "defensive"},
+	}
+}
 
 func SeedADC() []Slot {
 	return []Slot{
@@ -361,17 +458,17 @@ func SeedADJuggernaut() []Slot {
 	}
 }
 
+func SeedAPJuggernaut() []Slot { return SeedAPBruiser() }
+
 func SeedAPBruiser() []Slot {
 	return []Slot{
 		{ItemID: ItemDoransRing, Name: "Doran's Ring", Priority: 100, Role: "start"},
 		{ItemID: ItemRodOfAges, Name: "Rod of Ages", Priority: 80, Role: "core"},
-		{ItemID: ItemRiftmaker(), Name: "Riftmaker", Priority: 72, Role: "offensive"},
+		{ItemID: ItemRiftmaker, Name: "Riftmaker", Priority: 72, Role: "offensive"},
 		{ItemID: ItemZhonyas, Name: "Zhonya's Hourglass", Priority: 65, Role: "defensive"},
 		{ItemID: ItemMercTreads, Name: "Mercury's Treads", Priority: 60, Role: "boots"},
 	}
 }
-
-func ItemRiftmaker() int { return 4633 }
 
 func SeedTank() []Slot {
 	return []Slot{

@@ -59,7 +59,18 @@ func AdjustByPressure(seed []Slot, p PressureSignals, liveScale float64, playerP
 		return out, reasons
 	}
 
-	ap := usesAPItems(playerPrimary, allTags)
+	ap := usesAPItems(playerPrimary, allTags) || hasItem(out, ItemNashors)
+
+	if hasItem(out, ItemNashors) {
+		if p.Tank > 0.22 {
+			out = upsert(out, Slot{ItemID: ItemRiftmaker, Name: "Riftmaker", Priority: 64 + 22*p.Tank*s, Role: "offensive"})
+			reasons = append(reasons, "live: HP/tanks → Riftmaker")
+		} else if p.Tank < 0.15 {
+			if bump(&out, ItemRiftmaker, -28*s) {
+				reasons = append(reasons, "live: low tank → Riftmaker ↓")
+			}
+		}
+	}
 
 	if ap {
 		if p.Tank < 0.15 {
@@ -153,12 +164,10 @@ func AdjustByPressure(seed []Slot, p PressureSignals, liveScale float64, playerP
 	}
 
 	if p.HealUtil > 0.12 {
-		if ap {
-			out = upsert(out, Slot{ItemID: ItemMorellonomicon, Name: "Morellonomicon", Priority: 58 + 20*p.HealUtil*s, Role: "utility"})
-			reasons = append(reasons, "live: heal_utility → Morellonomicon")
-		} else {
-			out = upsert(out, Slot{ItemID: ItemExecutioners, Name: "Executioner's Calling", Priority: 58 + 20*p.HealUtil*s, Role: "utility"})
-			reasons = append(reasons, "live: heal_utility → Executioner's")
+		var reason string
+		out, reason = applyHealCut(out, ap, p.HealUtil, s, true)
+		if reason != "" {
+			reasons = append(reasons, reason)
 		}
 	}
 

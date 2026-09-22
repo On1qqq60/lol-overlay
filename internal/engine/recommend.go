@@ -126,9 +126,21 @@ func Recommend(store *data.Store, snap GameSnapshot) Recommendation {
 	build, allyReasons = rules.AdjustAllyFront(build, allyFront, playerPrimary, playerTags)
 	reasons = append(reasons, allyReasons...)
 
-	build = rules.CollapseBoots(build)
-	build = rules.CollapseLethalityCores(build)
-	build = rules.ProtectCorePriority(build)
+	ownedIDs := []int{}
+	if ok {
+		ownedIDs = active.Items
+	}
+	build = rules.FinalizeBuild(build, selfID, draftSig, rules.PressureSignals{
+		Tank:     pressure.Tank,
+		AD:       pressure.AD,
+		MR:       pressure.MR,
+		HealUtil: pressure.HealUtil,
+		APBurst:  pressure.APBurst,
+		Crit:     pressure.Crit,
+		CCHard:   pressure.CCHard,
+		Dive:     pressure.Dive,
+	}, liveScale, ownedIDs)
+	rules.FillWhy(build, store.Items)
 	reasons = pruneBootReasons(reasons, build)
 
 	if offrole {
@@ -148,7 +160,7 @@ func Recommend(store *data.Store, snap GameSnapshot) Recommendation {
 		}
 	}
 
-		pastStart := false
+	pastStart := false
 	gold := snap.CurrentGold
 	if ok {
 		legs := store.Items.LegendaryCount(active.Items)
@@ -177,6 +189,7 @@ func Recommend(store *data.Store, snap GameSnapshot) Recommendation {
 		pastStart = legs > 0 || ownsStart || active.Level >= 2
 	}
 	next, hasNext := nextPurchase(build, owned, pastStart, gold, store.Items)
+	build = dropFinishedComponents(build, owned)
 
 	top := topThreats(threats, 2)
 
@@ -233,6 +246,22 @@ func nextPurchase(build []rules.Slot, owned map[int]struct{}, pastStart bool, go
 	return rules.Slot{}, false
 }
 
+func dropFinishedComponents(build []rules.Slot, owned map[int]struct{}) []rules.Slot {
+	out := make([]rules.Slot, 0, len(build))
+	for _, s := range build {
+		if s.Role == "component" && (ownsUpgradeOf(owned, s.ItemID) || hasOwned(owned, s.ItemID)) {
+			continue
+		}
+		out = append(out, s)
+	}
+	return out
+}
+
+func hasOwned(owned map[int]struct{}, id int) bool {
+	_, ok := owned[id]
+	return ok
+}
+
 func ownsAnyBoots(owned map[int]struct{}, items *tags.ItemCatalog) bool {
 	for id := range owned {
 		if hasTag(items.Tags[id], tags.ItemBoots) {
@@ -253,12 +282,14 @@ func hasTag(list []string, t string) bool {
 
 func ownsUpgradeOf(owned map[int]struct{}, componentID int) bool {
 	upgrades := map[int][]int{
-		rules.ItemLostChapter: {rules.ItemMalignance, rules.ItemLudens, rules.ItemBlackfire, rules.ItemRodOfAges},
-		rules.ItemOblivionOrb:  {rules.ItemMorellonomicon},
-		rules.ItemSeekers:      {rules.ItemZhonyas},
-		rules.ItemSerratedDirk: {rules.ItemYoumuu, rules.ItemOpportunity, rules.ItemEclipse, 6698, 6699},
-		rules.ItemHauntingGuise: {rules.ItemLiandrys},
-		rules.ItemFatedAshes:   {rules.ItemLiandrys, rules.ItemBlackfire},
+		rules.ItemLostChapter:    {rules.ItemMalignance, rules.ItemLudens, rules.ItemBlackfire, rules.ItemRodOfAges},
+		rules.ItemRecurveBow:      {rules.ItemNashors, rules.ItemBOTRK},
+		rules.ItemAmplifyingTome: {rules.ItemNashors},
+		rules.ItemOblivionOrb:    {rules.ItemMorellonomicon},
+		rules.ItemSeekers:        {rules.ItemZhonyas},
+		rules.ItemSerratedDirk:   {rules.ItemYoumuu, rules.ItemOpportunity, rules.ItemEclipse, 6698, 6699},
+		rules.ItemHauntingGuise:  {rules.ItemLiandrys},
+		rules.ItemFatedAshes:     {rules.ItemLiandrys, rules.ItemBlackfire},
 	}
 	for _, up := range upgrades[componentID] {
 		if _, ok := owned[up]; ok {

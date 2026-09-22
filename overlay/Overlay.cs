@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -114,34 +115,86 @@ namespace LolBuildOverlay
 
     public static class ImageCache
     {
+        private const string Cdn = "https://ddragon.leagueoflegends.com/cdn/16.18.1/img/item/";
         private static readonly Dictionary<string, BitmapImage> Map = new Dictionary<string, BitmapImage>();
+        private static readonly object Gate = new object();
+
+        static ImageCache()
+        {
+            try
+            {
+                ServicePointManager.SecurityProtocol =
+                    (SecurityProtocolType)3072 | (SecurityProtocolType)768 | (SecurityProtocolType)192;
+            }
+            catch { }
+        }
 
         public static void LoadAll()
         {
             Map.Clear();
-            if (!Directory.Exists(AppPaths.ItemsDir)) return;
+            if (!Directory.Exists(AppPaths.ItemsDir))
+            {
+                try { Directory.CreateDirectory(AppPaths.ItemsDir); } catch { return; }
+            }
             foreach (var file in Directory.GetFiles(AppPaths.ItemsDir, "*.png"))
             {
-                try
-                {
-                    var bmp = new BitmapImage();
-                    bmp.BeginInit();
-                    bmp.UriSource = new Uri(file, UriKind.Absolute);
-                    bmp.CacheOption = BitmapCacheOption.OnLoad;
-                    bmp.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-                    bmp.DecodePixelWidth = 64;
-                    bmp.EndInit();
-                    bmp.Freeze();
+                var bmp = FromFile(file);
+                if (bmp != null)
                     Map[Path.GetFileNameWithoutExtension(file)] = bmp;
-                }
-                catch { }
             }
         }
 
         public static ImageSource Get(string id)
         {
+            if (string.IsNullOrEmpty(id) || id == "0") return null;
             BitmapImage bmp;
-            return Map.TryGetValue(id, out bmp) ? bmp : null;
+            if (Map.TryGetValue(id, out bmp) && bmp != null) return bmp;
+            lock (Gate)
+            {
+                if (Map.TryGetValue(id, out bmp) && bmp != null) return bmp;
+                var path = Path.Combine(AppPaths.ItemsDir, id + ".png");
+                bmp = FromFile(path);
+                if (bmp == null) bmp = Download(id, path);
+                if (bmp != null) Map[id] = bmp;
+                return bmp;
+            }
+        }
+
+        private static BitmapImage Download(string id, string path)
+        {
+            try
+            {
+                Directory.CreateDirectory(AppPaths.ItemsDir);
+                using (var wc = new WebClient())
+                    wc.DownloadFile(Cdn + id + ".png", path);
+                return FromFile(path);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static BitmapImage FromFile(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path) || new FileInfo(path).Length < 32)
+                return null;
+            try
+            {
+                var bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.UriSource = new Uri(path, UriKind.Absolute);
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+                bmp.DecodePixelWidth = 64;
+                bmp.EndInit();
+                bmp.Freeze();
+                return bmp;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 
@@ -152,6 +205,14 @@ namespace LolBuildOverlay
 
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint flags);
+
+        private static readonly IntPtr HwndTopmost = new IntPtr(-1);
+        private const uint SwpNoMove = 0x0002;
+        private const uint SwpNoSize = 0x0001;
+        private const uint SwpNoActivate = 0x0010;
 
         private const int HotkeyId = 1;
         private const int WmHotkey = 0x0312;
@@ -169,6 +230,8 @@ namespace LolBuildOverlay
         private RecommendedBuild _current;
         private bool _liveLook;
         private MatchState _match;
+        private string _invKey;
+        private DateTime _lastAnalyzeUtc = DateTime.MinValue;
 
         [STAThread]
         public static void Main()
@@ -206,7 +269,11 @@ namespace LolBuildOverlay
             SetupTray();
 
             _poll = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            _poll.Tick += (s, e) => FetchAsync();
+            _poll.Tick += (s, e) =>
+            {
+                BumpTopmost();
+                FetchAsync();
+            };
             _poll.Start();
             FetchAsync();
             Analyze(false);
@@ -264,6 +331,7 @@ namespace LolBuildOverlay
         {
             if (_engineBusy) return;
             _engineBusy = true;
+            _lastAnalyzeUtc = DateTime.UtcNow;
             if (_build != null) _build.SetBusy(true);
             ThreadPool.QueueUserWorkItem(_ =>
             {
@@ -376,6 +444,26 @@ namespace LolBuildOverlay
             _settings.Show();
         }
 
+        private void BumpTopmost()
+        {
+            Raise(_build);
+            Raise(_hud);
+        }
+
+        private static void Raise(Window w)
+        {
+            if (w == null || !w.IsVisible) return;
+            try
+            {
+                w.Topmost = false;
+                w.Topmost = true;
+                var h = new WindowInteropHelper(w).Handle;
+                if (h != IntPtr.Zero)
+                    SetWindowPos(h, HwndTopmost, 0, 0, 0, 0, SwpNoMove | SwpNoSize | SwpNoActivate);
+            }
+            catch { }
+        }
+
         private void FetchAsync()
         {
             ThreadPool.QueueUserWorkItem(_ =>
@@ -399,15 +487,47 @@ namespace LolBuildOverlay
                 var text = "lol.build · " + LiveClient.Status;
                 if (text.Length > 63) text = text.Substring(0, 63);
                 _tray.Text = text;
-                if (LiveClient.Connected && !_connectedOnce && match != null && match.Me != null)
+                if (LiveClient.Connected && match != null && match.Me != null)
                 {
-                    _connectedOnce = true;
-                    _tray.ShowBalloonTip(2000, "lol.build", "Игра: " + match.Me.championName, WinForms.ToolTipIcon.Info);
-                    Analyze(true);
+                    if (!_connectedOnce)
+                    {
+                        _connectedOnce = true;
+                        _tray.ShowBalloonTip(2000, "lol.build", "Игра: " + match.Me.championName, WinForms.ToolTipIcon.Info);
+                        Analyze(true);
+                    }
+                    else
+                    {
+                        var key = InventoryKey(match);
+                        var stale = (DateTime.UtcNow - _lastAnalyzeUtc).TotalSeconds >= 4;
+                        if (stale || key != _invKey)
+                        {
+                            _invKey = key;
+                            Analyze(true);
+                        }
+                    }
                 }
-                if (!LiveClient.Connected) _connectedOnce = false;
+                if (!LiveClient.Connected)
+                {
+                    _connectedOnce = false;
+                    _invKey = null;
+                }
             }
             catch { }
+        }
+
+        private static string InventoryKey(MatchState match)
+        {
+            if (match == null || match.Me == null || match.Me.items == null)
+                return "";
+            var sb = new StringBuilder();
+            for (var i = 0; i < match.Me.items.Count; i++)
+            {
+                var it = match.Me.items[i];
+                if (it == null || it.itemID <= 0) continue;
+                sb.Append(it.itemID).Append(',');
+            }
+            sb.Append('|').Append((int)(match.Gold / 50));
+            return sb.ToString();
         }
 
         private void Reset()
@@ -972,6 +1092,28 @@ namespace LolBuildOverlay
 
         public static Border ItemIcon(string id, int size, bool next)
         {
+            var src = ImageCache.Get(id);
+            UIElement child;
+            if (src != null)
+            {
+                child = new Image { Stretch = Stretch.UniformToFill, Source = src };
+            }
+            else
+            {
+                var label = ItemNames.Get(id);
+                if (string.IsNullOrEmpty(label)) label = id ?? "?";
+                child = new TextBlock
+                {
+                    Text = label,
+                    FontSize = Math.Max(7, size / 5.0),
+                    Foreground = Brushes.White,
+                    TextWrapping = TextWrapping.Wrap,
+                    TextAlignment = TextAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(1)
+                };
+            }
             var border = new Border
             {
                 Width = size,
@@ -981,16 +1123,14 @@ namespace LolBuildOverlay
                 BorderBrush = next
                     ? new SolidColorBrush(Color.FromRgb(232, 196, 110))
                     : new SolidColorBrush(Color.FromArgb(140, 255, 255, 255)),
-                Background = Brushes.Transparent,
+                Background = src != null
+                    ? Brushes.Transparent
+                    : new SolidColorBrush(Color.FromArgb(180, 20, 18, 14)),
                 Cursor = Cursors.Arrow,
                 ClipToBounds = true,
                 SnapsToDevicePixels = true,
                 ToolTip = ItemNames.Get(id),
-                Child = new Image
-                {
-                    Stretch = Stretch.UniformToFill,
-                    Source = ImageCache.Get(id)
-                }
+                Child = child
             };
             ToolTipService.SetInitialShowDelay(border, 120);
             ToolTipService.SetShowDuration(border, 12000);

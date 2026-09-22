@@ -11,6 +11,7 @@ var ComponentsToward = map[int][]int{
 	ItemLiandrys:       {ItemHauntingGuise, ItemFatedAshes},
 	ItemShadowflame:    {ItemNeedlessly, ItemBlastingWand},
 	ItemStormsurge:     {ItemHextechAlt, ItemAetherWisp},
+	ItemLichBane:       {ItemSheen, ItemAetherWisp, ItemBlastingWand},
 	ItemRabadons:       {ItemNeedlessly, ItemNeedlessly},
 	ItemVoidStaff:      {ItemBlastingWand},
 	ItemMorellonomicon: {ItemOblivionOrb, ItemBlastingWand},
@@ -18,14 +19,19 @@ var ComponentsToward = map[int][]int{
 	ItemOpportunity:    {ItemSerratedDirk},
 	ItemEclipse:        {ItemSerratedDirk},
 	ItemInfinityEdge:   {1038}, // BF-like if present; else skipped by gold lookup
+	ItemNashors:        {ItemRecurveBow, ItemAmplifyingTome, ItemBlastingWand},
+	ItemYunTal:         {1038, 3144, 1036},
+	ItemDeathsDance:    {1037, 3133},
+	ItemBloodthirster:  {1038, 1053},
 	ItemKraken:         {6670}, // Noonquiver
 	ItemBOTRK:          {1053, 1043},
-	ItemTrinity:        {3057, 3044, 3051},
+	ItemTrinity:        {ItemSheen, 3044, 3051},
 	ItemSunderedSky:    {3133},
 	ItemBlackCleaver:   {3133, 3067},
 	ItemSteraks:        {1037, 1028}, // pickaxe / ruby-ish; gold picker soft
-	ItemIceborn:        {3057, 1028},
+	ItemIceborn:        {ItemSheen, 1028},
 	ItemExecutioners:   {},
+	ItemMortalReminder: {ItemExecutioners},
 }
 
 // PickAffordable returns the best purchase for a target slot given gold.

@@ -13,8 +13,14 @@ live_snap.json
 
 # Overlay runtime
 overlay/live.log
+overlay/engine.log
 overlay/overlay.err.txt
 overlay/overlay.out.txt
 overlay/err.txt
 overlay/out.txt
 overlay/settings.ini
+overlay/assets/
+
+# Local leftovers, not the overlay engine
+core/
+.kilo/

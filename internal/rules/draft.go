@@ -20,6 +20,8 @@ const (
 	ItemZhonyas        = 3157
 	ItemShadowflame    = 4645
 	ItemStormsurge     = 4646
+	ItemLichBane       = 3100
+	ItemSheen          = 3057
 	ItemLiandrys       = 6653
 	ItemRabadons       = 3089
 	ItemVoidStaff      = 3135
@@ -50,6 +52,15 @@ const (
 	ItemSteraks        = 3053
 	ItemIceborn        = 6662
 	ItemSpiritVisage   = 3065
+	ItemNashors        = 3115
+	ItemRecurveBow     = 1043
+	ItemAmplifyingTome = 1052
+	ItemYunTal         = 3032
+	ItemDeathsDance    = 6333
+	ItemBloodthirster  = 3072
+	ItemWitsEnd        = 3091
+	ItemMortalReminder = 3033
+	ItemGuardianAngel  = 3026
 )
 
 // Slot is one step in a recommended build path.
@@ -58,6 +69,7 @@ type Slot struct {
 	Name     string  `json:"name"`
 	Priority float64 `json:"priority"`
 	Role     string  `json:"role"` // start, component, core, boots, defensive, offensive, pen, utility
+	Why      string  `json:"why,omitempty"`
 }
 
 // DraftSignals are weighted 0..1 team aggregates from champion tags (pre-items).
@@ -85,6 +97,9 @@ func DraftFromProfiles(profiles []tags.ChampionProfile) DraftSignals {
 		}
 		if p.Has(tags.StyleHealer) {
 			d.Healer += w
+		} else if p.Has(tags.ThreatSustain) {
+			// Sion / Mundo / Aatrox heal from kit. Shields (Morgana) stay out.
+			d.Healer += w * 0.55
 		}
 		if p.Has(tags.StyleShield) {
 			d.Shield += w
@@ -115,18 +130,14 @@ func AdjustDraft(seed []Slot, d DraftSignals, draftScale float64, playerPrimary 
 		return out, reasons
 	}
 
-	ap := usesAPItems(playerPrimary, allTags)
+	ap := usesAPItems(playerPrimary, allTags) || hasItem(out, ItemNashors)
 
-	// Healers → grievous. Do NOT treat shield-only (Morgana) as heal.
+	// Healers / sustain kits → grievous. Do NOT treat shield-only (Morgana) as heal.
 	if d.Healer > 0.12 {
-		if ap {
-			prio := 50 + 25*d.Healer*s
-			out = upsert(out, Slot{ItemID: ItemMorellonomicon, Name: "Morellonomicon", Priority: prio, Role: "utility"})
-			reasons = append(reasons, "draft: healer → Morello")
-		} else {
-			prio := 50 + 25*d.Healer*s
-			out = upsert(out, Slot{ItemID: ItemExecutioners, Name: "Executioner's Calling", Priority: prio, Role: "utility"})
-			reasons = append(reasons, "draft: healer → Executioner's")
+		var reason string
+		out, reason = applyHealCut(out, ap, d.Healer, s, false)
+		if reason != "" {
+			reasons = append(reasons, reason)
 		}
 	}
 
@@ -197,6 +208,52 @@ func AdjustDraft(seed []Slot, d DraftSignals, draftScale float64, playerPrimary 
 		}
 	}
 	return out, reasons
+}
+
+// applyHealCut raises grievous. AD seeds with Mortal Reminder bump that
+// legendary instead of inserting a stray Executioner's beside it.
+func applyHealCut(out []Slot, ap bool, pressure, scale float64, live bool) ([]Slot, string) {
+	if pressure <= 0.12 || scale <= 0.01 {
+		return out, ""
+	}
+	if ap {
+		prio := 50 + 25*pressure*scale
+		if live {
+			prio = 58 + 20*pressure*scale
+		}
+		out = upsert(out, Slot{ItemID: ItemMorellonomicon, Name: "Morellonomicon", Priority: prio, Role: "utility"})
+		if live {
+			return out, "live: heal_utility → Morellonomicon"
+		}
+		return out, "draft: healer → Morello"
+	}
+	if hasItem(out, ItemMortalReminder) {
+		if bump(&out, ItemMortalReminder, 16+22*pressure*scale) {
+			if live {
+				return out, "live: heal/sustain → Mortal Reminder ↑"
+			}
+			return out, "draft: heal/sustain → Mortal Reminder ↑"
+		}
+		return out, ""
+	}
+	prio := 50 + 25*pressure*scale
+	if live {
+		prio = 58 + 20*pressure*scale
+	}
+	out = upsert(out, Slot{ItemID: ItemExecutioners, Name: "Executioner's Calling", Priority: prio, Role: "utility"})
+	if live {
+		return out, "live: heal_utility → Executioner's"
+	}
+	return out, "draft: healer → Executioner's"
+}
+
+func hasItem(slots []Slot, id int) bool {
+	for _, s := range slots {
+		if s.ItemID == id {
+			return true
+		}
+	}
+	return false
 }
 
 func cloneSlots(in []Slot) []Slot {
