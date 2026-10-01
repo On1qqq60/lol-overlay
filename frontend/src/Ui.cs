@@ -172,5 +172,20 @@ namespace LolBuildOverlay
         {
             return StarGlyph();
         }
+
+        public static UIElement RefreshGlyph()
+        {
+            return new System.Windows.Shapes.Path
+            {
+                Width = 13,
+                Height = 13,
+                Stretch = Stretch.Uniform,
+                Fill = new SolidColorBrush(Color.FromRgb(232, 196, 110)),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Effect = Glow(),
+                Data = Geometry.Parse("M12,5 V2 L8,6 L12,10 V7 A6,6 0 1 1 6.2,12.2 L4.4,13.6 A8,8 0 1 0 12,5 Z")
+            };
+        }
     }
 }

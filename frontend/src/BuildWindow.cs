@@ -23,7 +23,12 @@ namespace LolBuildOverlay
     {
         private readonly StackPanel _row;
         private readonly StackPanel _early;
-        private StackPanel _styles;
+        private Grid _styles;
+        private Button _damageAd;
+        private Button _damageAp;
+        private Button _wishBtn;
+        private TextBox _wishBox;
+        private string _activeDamage;
         private readonly StackPanel _changes;
         private readonly Border _chrome;
         private readonly Border _body;
@@ -44,6 +49,8 @@ namespace LolBuildOverlay
         public event Action AnalyzeClicked;
         public event Action SettingsClicked;
         public event Action<string> StyleClicked;
+        public event Action<string> DamagePicked;
+        public event Action<string> WishSubmitted;
 
         private readonly Button _styleStandard;
         private readonly Button _styleDamage;
@@ -66,7 +73,8 @@ namespace LolBuildOverlay
 
             _row = new StackPanel { Orientation = Orientation.Horizontal };
             _early = new StackPanel { Orientation = Orientation.Horizontal };
-            _scan = Ui.MiniButton("▶", "Обновить сборку");
+            _scan = Ui.MiniButton("", "Обновить сборку");
+            _scan.Content = Ui.RefreshGlyph();
             _scan.Click += (s, e) => { e.Handled = true; if (AnalyzeClicked != null) AnalyzeClicked(); };
             _gear = Ui.MiniButton("⚙", "Настройки");
             _gear.Click += (s, e) => { e.Handled = true; if (SettingsClicked != null) SettingsClicked(); };
@@ -122,11 +130,57 @@ namespace LolBuildOverlay
             _styleDamage = StyleButton("damage", "Урон");
             _styleDefense = StyleButton("defensive", "Защита");
             _fold.VerticalAlignment = VerticalAlignment.Center;
-            _styles = new StackPanel { Orientation = Orientation.Horizontal };
+            _damageAd = SubStyle("ad", "Физический (ад)");
+            _damageAp = SubStyle("ap", "Магический (ап)");
+            _wishBtn = StyleButton("wish", "Я хочу ...");
+            _wishBox = new TextBox
+            {
+                Margin = new Thickness(0, 4, 0, 0),
+                MinHeight = 26,
+                FontSize = 13,
+                Padding = new Thickness(8, 4, 8, 4),
+                Background = new SolidColorBrush(Color.FromArgb(230, 14, 16, 20)),
+                Foreground = new SolidColorBrush(Color.FromRgb(236, 232, 226)),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(200, 170, 110)),
+                CaretBrush = new SolidColorBrush(Color.FromRgb(232, 196, 110)),
+                Visibility = Visibility.Collapsed,
+                ToolTip = "Напиши пожелание и нажми Enter"
+            };
+            _wishBox.KeyDown += (s, e) =>
+            {
+                if (e.Key != Key.Enter) return;
+                e.Handled = true;
+                SubmitWish();
+            };
+            _styles = new Grid();
+            _styles.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            _styles.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            _styles.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            _styles.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            _styles.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            _styles.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            _styles.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            _styles.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            Put(_fold, 0, 0);
+            Put(_styleStandard, 1, 0);
+            Put(_styleDamage, 2, 0);
+            Put(_styleDefense, 3, 0);
+            Put(_wishBtn, 4, 0);
             _styles.Children.Add(_fold);
             _styles.Children.Add(_styleStandard);
             _styles.Children.Add(_styleDamage);
             _styles.Children.Add(_styleDefense);
+            _styles.Children.Add(_wishBtn);
+            _damageAd.Visibility = Visibility.Collapsed;
+            _damageAp.Visibility = Visibility.Collapsed;
+            Put(_damageAd, 2, 1);
+            Put(_damageAp, 3, 1);
+            _styles.Children.Add(_damageAd);
+            _styles.Children.Add(_damageAp);
+            Grid.SetColumn(_wishBox, 0);
+            Grid.SetColumnSpan(_wishBox, 5);
+            Grid.SetRow(_wishBox, 2);
+            _styles.Children.Add(_wishBox);
 
             var col = new StackPanel();
             col.Children.Add(_early);
@@ -170,6 +224,12 @@ namespace LolBuildOverlay
             PaintStyles();
         }
 
+        static void Put(UIElement el, int col, int row)
+        {
+            Grid.SetColumn(el, col);
+            Grid.SetRow(el, row);
+        }
+
         Button StyleButton(string id, string label)
         {
             var button = new Button
@@ -178,15 +238,102 @@ namespace LolBuildOverlay
                 Template = Ui.GhostButtonTemplate(),
                 Margin = new Thickness(0, 0, 10, 0),
                 VerticalAlignment = VerticalAlignment.Center,
-                ToolTip = "Стартовый промпт: " + label,
+                ToolTip = id == "wish" ? "Своё пожелание к сборке" : "Стартовый промпт: " + label,
                 Tag = id
             };
             button.Click += (s, e) =>
             {
                 e.Handled = true;
+                if (id == "damage") { ToggleDamage(); return; }
+                if (id == "wish") { ToggleWish(); return; }
+                HideDamageChoices();
                 if (StyleClicked != null) StyleClicked(id);
             };
             return button;
+        }
+
+        Button SubStyle(string id, string label)
+        {
+            var button = new Button
+            {
+                Cursor = Cursors.Hand,
+                Template = Ui.GhostButtonTemplate(),
+                Margin = new Thickness(0, 2, 8, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                ToolTip = label,
+                Tag = id
+            };
+            button.Click += (s, e) =>
+            {
+                e.Handled = true;
+                _activeDamage = id;
+                PaintDamage();
+                if (DamagePicked != null) DamagePicked(id);
+            };
+            return button;
+        }
+
+        void ShowDamage(bool open)
+        {
+            var vis = open ? Visibility.Visible : Visibility.Collapsed;
+            if (_damageAd != null) _damageAd.Visibility = vis;
+            if (_damageAp != null) _damageAp.Visibility = vis;
+        }
+
+        void ToggleDamage()
+        {
+            var open = _damageAd == null || _damageAd.Visibility != Visibility.Visible;
+            ShowDamage(open);
+            PaintDamage();
+        }
+
+        public void HideDamageChoices()
+        {
+            ShowDamage(false);
+        }
+
+        public void SetActiveDamage(string id)
+        {
+            _activeDamage = id ?? "";
+            if (_activeDamage.Length > 0) ShowDamage(true);
+            PaintDamage();
+        }
+
+        void PaintDamage()
+        {
+            PaintSub(_damageAd, "Физический (ад)");
+            PaintSub(_damageAp, "Магический (ап)");
+        }
+
+        void PaintSub(Button button, string label)
+        {
+            if (button == null) return;
+            var on = (string)button.Tag == _activeDamage;
+            var text = Ui.GlowText(label, 11, on
+                ? Color.FromRgb(255, 244, 210)
+                : Color.FromRgb(210, 170, 90));
+            text.TextDecorations = TextDecorations.Underline;
+            button.Content = text;
+        }
+
+        void ToggleWish()
+        {
+            var open = _wishBox.Visibility != Visibility.Visible;
+            _wishBox.Visibility = open ? Visibility.Visible : Visibility.Collapsed;
+            if (open)
+            {
+                _wishBox.Focus();
+                return;
+            }
+            SubmitWish();
+        }
+
+        void SubmitWish()
+        {
+            var text = _wishBox.Text == null ? "" : _wishBox.Text.Trim();
+            if (text.Length == 0 || WishSubmitted == null) return;
+            WishSubmitted(text);
         }
 
         public void SetActiveStyle(string id)
@@ -200,6 +347,9 @@ namespace LolBuildOverlay
             PaintStyle(_styleStandard, "Стандарт");
             PaintStyle(_styleDamage, "Урон");
             PaintStyle(_styleDefense, "Защита");
+            if (_wishBtn != null)
+                _wishBtn.Content = Ui.GlowText("Я хочу ...", 12, Color.FromRgb(232, 196, 110));
+            PaintDamage();
         }
 
         void PaintStyle(Button button, string label)

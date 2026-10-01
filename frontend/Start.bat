@@ -49,6 +49,8 @@ for %%f in (src\*.cs) do echo %%f>> bin\sources.rsp
   /r:"%FX%\System.Drawing.dll" ^
   /r:"%FX%\System.Web.Extensions.dll" ^
   /r:"%FX%\System.Core.dll" ^
+  /r:"%FX%\System.IO.Compression.dll" ^
+  /r:"%FX%\System.IO.Compression.FileSystem.dll" ^
   @bin\sources.rsp
 if errorlevel 1 (
   echo Compile failed.

@@ -25,6 +25,8 @@ namespace LolBuildOverlay
         public static int IconSize = 22;
         public static uint Vk = 0x77;
         public static string KeyName = "F8";
+        public static uint HideVk = 0x78;
+        public static string HideKeyName = "F9";
         public static bool ShowBuild = true;
         public static string SpeShuKey = "";
         public static string SpeShuModel = "qwen/qwen3.8-omni-flash";
@@ -57,6 +59,12 @@ namespace LolBuildOverlay
                         if (uint.TryParse(v, out n)) Vk = n;
                     }
                     else if (k == "key") KeyName = v;
+                    else if (k == "hide_vk")
+                    {
+                        uint n;
+                        if (uint.TryParse(v, out n)) HideVk = n;
+                    }
+                    else if (k == "hide_key") HideKeyName = v;
                     else if (k == "build") ShowBuild = v != "0" && v.ToLowerInvariant() != "false";
                     else if (k == "speshu_key") SpeShuKey = v;
                     else if (k == "speshu_model" && v.Length > 0) SpeShuModel = v;
@@ -76,6 +84,8 @@ namespace LolBuildOverlay
                 Upsert(lines, "size", IconSize.ToString(CultureInfo.InvariantCulture));
                 Upsert(lines, "vk", Vk.ToString(CultureInfo.InvariantCulture));
                 Upsert(lines, "key", KeyName);
+                Upsert(lines, "hide_vk", HideVk.ToString(CultureInfo.InvariantCulture));
+                Upsert(lines, "hide_key", HideKeyName);
                 Upsert(lines, "build", ShowBuild ? "1" : "0");
                 if (!string.IsNullOrEmpty(SpeShuKey)) Upsert(lines, "speshu_key", SpeShuKey);
                 if (!string.IsNullOrEmpty(SpeShuModel)) Upsert(lines, "speshu_model", SpeShuModel);

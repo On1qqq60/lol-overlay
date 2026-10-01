@@ -22,15 +22,16 @@ namespace LolBuildOverlay
     public class SettingsWindow : Window
     {
         public event Action Changed;
-        private bool _capture;
+        private int _capture;
         private readonly Button _bind;
+        private readonly Button _hideBind;
 
         public SettingsWindow()
         {
             Title = "lol.build";
             Icon = AppIcon.Wpf();
-            Width = 320;
-            Height = 300;
+            Width = 340;
+            Height = 390;
             Topmost = true;
             ResizeMode = ResizeMode.NoResize;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -69,37 +70,63 @@ namespace LolBuildOverlay
             root.Children.Add(sz);
 
             root.Children.Add(Label("Бинд обновления данных"));
-            _bind = new Button
+            _bind = BindButton(AppSettings.KeyName, 1);
+            root.Children.Add(_bind);
+
+            root.Children.Add(Label("Бинд скрытия оверлея"));
+            _hideBind = BindButton(AppSettings.HideKeyName, 2);
+            root.Children.Add(_hideBind);
+
+            Content = root;
+            PreviewKeyDown += OnKey;
+        }
+
+        Button BindButton(string name, int slot)
+        {
+            var button = new Button
             {
-                Content = AppSettings.KeyName,
+                Content = name,
                 Height = 32,
                 Margin = new Thickness(0, 4, 0, 0),
                 Background = new SolidColorBrush(Color.FromRgb(28, 22, 12)),
                 Foreground = new SolidColorBrush(Color.FromRgb(200, 170, 110)),
                 BorderBrush = new SolidColorBrush(Color.FromRgb(200, 170, 110))
             };
-            _bind.Click += (s, e) =>
+            button.Click += (s, e) =>
             {
-                _capture = true;
-                _bind.Content = "нажмите клавишу…";
+                _capture = slot;
+                button.Content = "нажмите клавишу…";
             };
-            root.Children.Add(_bind);
-
-            Content = root;
-            PreviewKeyDown += OnKey;
+            return button;
         }
 
         private void OnKey(object sender, KeyEventArgs e)
         {
-            if (!_capture) return;
+            if (_capture == 0) return;
             e.Handled = true;
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            if (key == Key.Escape)
+            {
+                _bind.Content = AppSettings.KeyName;
+                _hideBind.Content = AppSettings.HideKeyName;
+                _capture = 0;
+                return;
+            }
             var vk = (uint)KeyInterop.VirtualKeyFromKey(key);
             if (vk == 0) return;
-            AppSettings.Vk = vk;
-            AppSettings.KeyName = key.ToString();
-            _bind.Content = AppSettings.KeyName;
-            _capture = false;
+            if (_capture == 2)
+            {
+                AppSettings.HideVk = vk;
+                AppSettings.HideKeyName = key.ToString();
+                _hideBind.Content = AppSettings.HideKeyName;
+            }
+            else
+            {
+                AppSettings.Vk = vk;
+                AppSettings.KeyName = key.ToString();
+                _bind.Content = AppSettings.KeyName;
+            }
+            _capture = 0;
             if (Changed != null) Changed();
         }
 

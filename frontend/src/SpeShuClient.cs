@@ -12,7 +12,7 @@ namespace LolBuildOverlay
     {
         const string Endpoint = "https://speshu.ai/api/v1/chat/completions";
 
-        public static EngineResult Recommend(string file, string styleLabel, string plan, MatchState match, bool explainItems)
+        public static EngineResult Recommend(string file, string styleLabel, string plan, MatchState match, bool explainItems, string wish, string damage)
         {
             if (string.IsNullOrEmpty(AppSettings.SpeShuKey))
                 return Fail("в settings.ini нет speshu_key");
@@ -37,6 +37,12 @@ namespace LolBuildOverlay
             user += explainItems
                 ? "\n\nРежим: предметы. Эта строка главнее абзацев про текст. play оставь пустым массивом. У каждого из 6 предметов why: имя, зачем он в этой сборке и против кого из снимка."
                 : "\n\nРежим: игра. Эта строка главнее абзацев про why. В play дай 4–6 коротких строк, как играть эту катку до 7-й минуты: роль, с кем размениваться и чего не делать. why у каждого предмета оставь пустой строкой. Шесть предметов, ботинки и early всё равно заполни.";
+            if (damage == "ad")
+                user += "\n\nТип урона: физический. Все 6 предметов и путь до них собираются от силы атаки этого чемпиона.";
+            else if (damage == "ap")
+                user += "\n\nТип урона: магический. Все 6 предметов и путь до них собираются от силы умений этого чемпиона.";
+            if (!string.IsNullOrEmpty(wish))
+                user += "\n\nПожелание игрока, его надо выполнить: " + wish + ". Чемпион и роль остаются из снимка. Сборка должна быть сильной на этом герое и при этом делать то, что он просит.";
 
             try
             {

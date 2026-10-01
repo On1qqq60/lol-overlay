@@ -38,6 +38,7 @@ namespace LolBuildOverlay
         private const uint SwpNoActivate = 0x0010;
 
         private const int HotkeyId = 1;
+        private const int HideHotkeyId = 2;
         private const int WmHotkey = 0x0312;
 
         private BuildWindow _build;
@@ -53,6 +54,9 @@ namespace LolBuildOverlay
         private RecommendedBuild _current;
         private string _style;
         private string _styleLabel;
+        private string _damage;
+        private string _wish = "";
+        private bool _concealed;
         private string _planText = "";
         private bool _liveLook;
         private MatchState _match;
@@ -91,6 +95,8 @@ namespace LolBuildOverlay
             _build = new BuildWindow();
             _build.AnalyzeClicked += () => Analyze(true);
             _build.StyleClicked += ChooseStyle;
+            _build.DamagePicked += ChooseDamage;
+            _build.WishSubmitted += SubmitWish;
             _build.SettingsClicked += OpenSettings;
             _build.Show();
             ApplyVisual();
@@ -141,7 +147,10 @@ namespace LolBuildOverlay
                 if (_hwnd != null) _hwnd.AddHook(WndProc);
             }
             try { UnregisterHotKey(helper.Handle, HotkeyId); } catch { }
+            try { UnregisterHotKey(helper.Handle, HideHotkeyId); } catch { }
             RegisterHotKey(helper.Handle, HotkeyId, 0, AppSettings.Vk);
+            if (AppSettings.HideVk != AppSettings.Vk)
+                RegisterHotKey(helper.Handle, HideHotkeyId, 0, AppSettings.HideVk);
         }
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -151,11 +160,74 @@ namespace LolBuildOverlay
                 Analyze(true);
                 handled = true;
             }
+            else if (msg == WmHotkey && wParam.ToInt32() == HideHotkeyId)
+            {
+                ToggleConceal();
+                handled = true;
+            }
             return IntPtr.Zero;
+        }
+
+        private void ToggleConceal()
+        {
+            if (_build == null) return;
+            if (_build.IsVisible)
+            {
+                _concealed = true;
+                _build.Hide();
+                return;
+            }
+            _concealed = false;
+            AppSettings.ShowBuild = true;
+            _build.Show();
+            _build.Topmost = true;
+        }
+
+        private void ChooseDamage(string kind)
+        {
+            var same = _style == "damage" && _damage == kind;
+            _damage = kind;
+            if (_build != null) _build.SetActiveDamage(kind);
+            if (same)
+            {
+                AskModel(false);
+                return;
+            }
+            if (_style == "damage")
+            {
+                _styleLabel = StyleLabel("damage");
+                AskModel(true);
+                return;
+            }
+            ChooseStyle("damage");
+        }
+
+        private void SubmitWish(string text)
+        {
+            _wish = text ?? "";
+            if (_wish.Length == 0) return;
+            var had = !string.IsNullOrEmpty(_style);
+            if (!had)
+            {
+                _style = "standard";
+                _styleLabel = StyleLabel("standard");
+                if (_build != null) _build.SetActiveStyle("standard");
+            }
+            var before7 = NowGame() < 7 * 60;
+            AskModel(!had || (before7 && _starts < 3));
         }
 
         private void ChooseStyle(string style)
         {
+            if (style != "damage")
+            {
+                _damage = "";
+                if (_build != null)
+                {
+                    _build.SetActiveDamage("");
+                    _build.HideDamageChoices();
+                }
+            }
             if (!string.IsNullOrEmpty(_style) && style == _style)
             {
                 AskModel(false);
@@ -178,8 +250,10 @@ namespace LolBuildOverlay
             AskModel(true);
         }
 
-        static string StyleLabel(string style)
+        string StyleLabel(string style)
         {
+            if (style == "damage" && _damage == "ap") return "дамажный, магический";
+            if (style == "damage" && _damage == "ad") return "дамажный, физический";
             if (style == "damage") return "дамажный";
             if (style == "defensive") return "защитный";
             return "стандартный";
@@ -214,7 +288,9 @@ namespace LolBuildOverlay
             ThreadPool.QueueUserWorkItem(_ =>
             {
                 EngineResult result = null;
-                try { result = SpeShuClient.Recommend(file, style, plan, match, explain); }
+                var wish = _wish;
+                var damage = _damage;
+                try { result = SpeShuClient.Recommend(file, style, plan, match, explain, wish, damage); }
                 catch (Exception ex) { result = new EngineResult { Error = ErrorText(ex) }; }
                 Dispatcher.BeginInvoke(new Action(() => ApplyModel(result, explain, start, previousPost)));
             });
@@ -488,7 +564,10 @@ namespace LolBuildOverlay
                 AppSettings.Save();
                 BindHotkey();
                 ApplyVisual();
-                SetBuildVisible(AppSettings.ShowBuild);
+                if (!AppSettings.ShowBuild)
+                    SetBuildVisible(false);
+                else if (!_concealed)
+                    SetBuildVisible(true);
             };
             _settings.Closed += (s, e) => { _settings = null; };
             _settings.Show();
@@ -588,6 +667,7 @@ namespace LolBuildOverlay
             if (_hwnd != null)
             {
                 try { UnregisterHotKey(_hwnd.Handle, HotkeyId); } catch { }
+            try { UnregisterHotKey(_hwnd.Handle, HideHotkeyId); } catch { }
             }
             if (_tray != null)
             {
