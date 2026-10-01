@@ -14,7 +14,7 @@
 После `git clone` на Windows достаточно:
 
 ```powershell
-overlay\Start.bat
+frontend\Start.bat
 ```
 
 Батник собирает Go-движок (`recommend.exe`) и C# HUD из исходников в этом репозитории — тот же алгоритм, что локально. Иконки предметов качаются с Data Dragon при первом показе. Нужны Go 1.22+ и .NET Framework 4.x (csc). Live Client отвечает только во время матча; без игры HUD покажет демо-фикстуру.
@@ -22,7 +22,7 @@ overlay\Start.bat
 ## Быстрый старт (CLI)
 
 ```powershell
-cd lol-overlay   # или lol-build-overlay
+cd backend
 $env:Path = "C:\Program Files\Go\bin;" + $env:Path
 
 # Рекомендация из живой игры
@@ -41,6 +41,7 @@ https://127.0.0.1:2999/liveclientdata/allgamedata
 Проверка / снимок на диск:
 
 ```powershell
+cd backend
 curl.exe -k https://127.0.0.1:2999/liveclientdata/allgamedata -o snap.json
 go run ./cmd/recommend -fixture snap.json
 ```
@@ -91,8 +92,8 @@ go run ./cmd/recommend -fixture snap.json
 Обновить предметы / чемпионов (нужен `pip install -r requirements.txt`):
 
 ```powershell
-python scripts/fetch_items.py
-python scripts/fetch_champions.py
+python backend/tools/fetch_items.py
+python backend/tools/fetch_champions.py
 ```
 
 ## Фикстуры (оффлайн-тесты)
@@ -101,13 +102,13 @@ python scripts/fetch_champions.py
 
 ```powershell
 # 100 кейсов
-python scripts/gen_live_fixtures.py --count 100
+python backend/tools/gen_live_fixtures.py --count 100
 
 # + прогон recommend и отчёт
-python scripts/gen_live_fixtures.py --count 50 --recommend --report out/report.md
+python backend/tools/gen_live_fixtures.py --count 50 --recommend --report out/report.md
 
 # Свой каталог
-python scripts/gen_live_fixtures.py --count 20 --out testdata/generated/live_onrole
+python backend/tools/gen_live_fixtures.py --count 20 --out testdata/generated/live_onrole
 ```
 
 Готовые ручные фикстуры: `testdata/fixtures/`.  
@@ -122,23 +123,21 @@ go run ./cmd/recommend -fixture testdata/fixtures/draft_start.json
 ## Тесты
 
 ```powershell
+cd backend
 go test ./internal/...
 ```
 
 ## Структура
 
 ```text
-cmd/recommend/          CLI рекомендаций (JSON для оверлея)
-cmd/bootstrap-tags/     бутстрап тегов
-internal/engine/        Recommend, threat, pressure
-internal/rules/         seeds, draft/live adjust, start sync
-internal/tags/          таксономия чемпионов/предметов
-internal/liveclient/    парсер Live Client API
-internal/data/          загрузка data/
-overlay/                WPF HUD, вызывает recommend.exe
-scripts/                fetch + генератор фикстур
-data/                   статический геймдата
-testdata/fixtures/      эталонные снапшоты
+frontend/               WPF HUD (src/, сборка в bin/)
+backend/                Go-движок
+  cmd/recommend/        CLI, JSON для оверлея
+  cmd/bootstrap-tags/   бутстрап тегов
+  internal/             engine, rules, tags, liveclient, data
+  data/                 статический геймдата
+  testdata/fixtures/    эталонные снапшоты
+  tools/                fetch Data Dragon и генератор фикстур
 ```
 
 ## Журнал алгоритма
@@ -246,7 +245,7 @@ testdata/fixtures/      эталонные снапшоты
 #### Контракт / HUD
 
 - JSON-теги на `Recommendation` / `Slot` / `Threat` / `Pressure`.
-- `overlay/Start.bat` собирает `recommend.exe` из корня и зовёт `-json -live` с `-root` на этот tree.
+- `frontend/Start.bat` собирает `backend` в `frontend/bin/recommend.exe` и зовёт `-json -live` с `-root` на каталог `backend`.
 
 ## Замечания по Live Client
 

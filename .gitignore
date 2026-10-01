@@ -12,14 +12,12 @@ snap.json
 live_snap.json
 
 # Overlay runtime
-overlay/live.log
-overlay/engine.log
-overlay/overlay.err.txt
-overlay/overlay.out.txt
-overlay/err.txt
-overlay/out.txt
-overlay/settings.ini
-overlay/assets/
+frontend/bin/
+dist/
+frontend/obj/
+frontend/settings.ini
+frontend/*.log
+backend/tools/scratch/
 
 # Local leftovers, not the overlay engine
 core/

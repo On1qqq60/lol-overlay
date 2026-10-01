@@ -1,0 +1,53 @@
+# Manual expert verdicts. Format: id score note
+# Score 0-10 strict Emerald+. Identity errors cap at 4. Wrong support/carry identity cap at 2-3.
+
+0001 4 Yone JG Mosstomper+dual MR+Mercs instead of Gustwalker/Berserkers/IE. Trinity ok but path is tank-fighter not Yone.
+0002 5 Fizz Stormsurge ok, Zhonya 2nd before boots, Zhonya+Banshee both in 6, no grievous vs Volibear.
+0003 4 Zeri generic Kraken ADC, Steelcaps first at 500g, no Runaan/Statikk/Hexplate, Exec 7th vs Senna.
+0004 6 Teemo Blackfire acceptable, Liandry up/down, Zhonya+Banshee, Nashor missing.
+0005 5 Nasus JG pet ok-ish, Cleaver/Sundered/Iceborn ok, Steelcaps first, FoN+Visage.
+0006 7 Urgot Cleaver/Sundered/Sterak/Steelcaps/Exec vs Yuumi good; next=already owned Doran; dual MR tail.
+0007 5 Yi top Trinity not Kraken/BotRK, Berserkers missing, dual MR.
+0008 7 Qiyana mid Youmuu/Collector/Serylda/Dirk next — clean lethality; Mercs vs Azir/Zoe ok.
+0009 3 Sylas JG Mosstomper + Stormsurge assassin template; Sylas wants RoA/Riftmaker/Scorchclaw.
+0010 4 Jhin mid Kraken is wrong (no AS scaling), Steelcaps first, wants Collector/IE/RFC.
+0011 6 Mel support Atlas/Blackfire correct mage supp; Zhonya before boots; Morello without heal.
+0012 4 Smolder Kraken not ER/RFC/IE/Shojin; generic ADC template.
+0013 4 Viego Mosstomper; Trinity ok; FoN+Visage vs 0 AP; Steelcaps first.
+0014 7 Zed top Youmuu/EON/Serylda/Steelcaps vs KSante — good lethality.
+0015 5 Rumble RoA/Riftmaker ok, Mercs vs 4 AD is wrong, Morello vs Taric weak.
+0016 6 Qiyana top Steelcaps first vs Aatrox, missing Exec vs Aatrox, Youmuu ok.
+0017 4 Hwei mid Mercs and Zhonya before Malignance at 500g — no mage spike.
+0018 6 Xerath Malignance/Lost Chapter ok, Morello vs Senna/Lulu good, dual def, Liandry conflict.
+0019 6 Naafiri Steelcaps vs Garen, Youmuu ok, Kassadin AP ignored.
+0020 5 Hwei support Zhonya before Blackfire.
+0021 7 Illaoi Cleaver/Sundered/Exec vs Soraka/Briar good; next=owned Doran; dual MR tail.
+0022 5 Singed full armor tank missing Rylai/Liandry identity.
+0023 6 Rengar mid Youmuu ok, Steelcaps first vs Irelia.
+0024 7 Rengar top Youmuu+Exec vs Senna, Steelcaps vs Ornn.
+0025 4 Fizz JG Mosstomper not Scorchclaw, Zhonya 2nd.
+0026 4 Darius JG Mosstomper, Steelcaps first, FoN+Visage, Cleaver/Sundered ok underneath.
+0027 4 Vi JG Mosstomper, FoN+Visage vs 0 AP, Trinity ok.
+0028 6 Garen Cleaver first ok vs Urgot, Iceborn odd, dual MR, next=Cleaver before Doran in list order.
+0029 4 Hecarim Mosstomper, FoN+Visage, Trinity ok, Mercs vs Ahri ok.
+0030 7 Rammus Mosstomper+Sunfire+Mercs vs 3 AP correct; Thornmail vs Warwick; dual MR justified-ish.
+0031 6 RekSai Trinity/Sundered, Mercs vs AP mid/supp, dual MR, Exec.
+0032 5 Draven mid Kraken generic, Steelcaps first, wants Collector/IE.
+0033 3 Bard Blackfire mage template; Bard wants Deadman/Locket/Shurelya.
+0034 6 Skarner tank Sunfire ok alternative to Trinity, Steelcaps, dual resist.
+0035 3 Renata Blackfire; she is enchanter/disruptor not mage burn.
+0036 2 Pyke Locket/Vow tank support; Pyke is lethality hook, never this.
+0037 6 Sivir generic Kraken/IE/RFC, Berserkers ok, Yun Tal/Navori better.
+0038 6 Azir support Blackfire poke is valid off-role; Liandry without tanks.
+0039 6 Taliyah support Blackfire+Morello vs Yuumi ok.
+0040 6 Teemo support Blackfire ok.
+0041 4 Camille JG Mosstomper, Trinity is correct core, dual MR, Steelcaps first.
+0042 5 Neeko Zhonya before Malignance vs 5 AD, dual def.
+0043 7 Xerath support Blackfire+Liandry vs Sion/Illaoi tanks.
+0044 6 Locke Youmuu lethality, Steelcaps first vs Ambessa/Samira.
+0045 6 Zyra Zhonya before Blackfire, Liandry vs Zac/Illaoi.
+0046 6 Gnar Trinity/Cleaver/Sundered good, FoN+Visage vs 3 AP pick one.
+0047 6 Amumu Mercs+Sunfire vs AP heavy, Thornmail/Randuin vs little AD.
+0048 2 Shen Moonstone enchanter; Shen wants Locket/Vow/tank.
+0049 5 MF mid Kraken ADC not Youmuu lethality, Exec vs Senna/Briar in tail.
+0050 3 Graves bot Kraken/RFC crit; Graves is lethality Youmuu/Collector, not crit ADC.
