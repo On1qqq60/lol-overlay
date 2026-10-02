@@ -60,4 +60,8 @@ if errorlevel 1 (
 
 copy /y app.ico bin\app.ico >nul
 copy /y data\names.txt bin\data\names.txt >nul
+copy /y data\runes.txt bin\data\runes.txt >nul
+copy /y data\champions.txt bin\data\champions.txt >nul
+if not exist bin\assets mkdir bin\assets
+copy /y assets\ugg.png bin\assets\ugg.png >nul
 start "" "%~dp0bin\LolBuildOverlay.exe"

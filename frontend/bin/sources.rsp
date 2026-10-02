@@ -2,6 +2,7 @@ src\AppIcon.cs
 src\AppPaths.cs
 src\AppSettings.cs
 src\BuildWindow.cs
+src\ChampionCards.cs
 src\EngineClient.cs
 src\ImageCache.cs
 src\ItemNames.cs
@@ -9,6 +10,8 @@ src\LiveClient.cs
 src\Models.cs
 src\OverlayApp.cs
 src\Portable.cs
+src\RuneData.cs
+src\RunesPanel.cs
 src\SettingsWindow.cs
 src\SimpleBuild.cs
 src\SpeShuClient.cs

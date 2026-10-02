@@ -624,6 +624,8 @@ namespace LolBuildOverlay
                         if (_build != null)
                         {
                             _build.SetClock(match.GameTime, true);
+                            if (match.Me != null)
+                                _build.SetLiveChampion(match.Me.championName, match.Me.position);
                             if ((fresh || !wasIn) && string.IsNullOrEmpty(_style))
                                 _build.ShowChoose();
                         }

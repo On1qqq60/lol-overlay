@@ -173,6 +173,40 @@ namespace LolBuildOverlay
             return StarGlyph();
         }
 
+        public static UIElement ChevronGlyph(bool down)
+        {
+            return new System.Windows.Shapes.Path
+            {
+                Width = 14,
+                Height = 14,
+                Stretch = Stretch.Uniform,
+                Fill = new SolidColorBrush(Color.FromRgb(232, 196, 110)),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Effect = Glow(),
+                Data = Geometry.Parse(down
+                    ? "M3,6 L12,16 L21,6 L19,4 L12,12 L5,4 Z"
+                    : "M3,16 L12,6 L21,16 L19,18 L12,10 L5,18 Z")
+            };
+        }
+
+        public static UIElement ArrowGlyph(bool left)
+        {
+            return new System.Windows.Shapes.Path
+            {
+                Width = 14,
+                Height = 14,
+                Stretch = Stretch.Uniform,
+                Fill = new SolidColorBrush(Color.FromRgb(232, 196, 110)),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Effect = Glow(),
+                Data = Geometry.Parse(left
+                    ? "M15,3 L5,12 L15,21 L17,19 L9,12 L17,5 Z"
+                    : "M7,3 L17,12 L7,21 L5,19 L13,12 L5,5 Z")
+            };
+        }
+
         public static UIElement RefreshGlyph()
         {
             return new System.Windows.Shapes.Path

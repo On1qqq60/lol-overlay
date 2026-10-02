@@ -1,0 +1,75 @@
+T|8100|Доминирование|perk-images/Styles/7200_Domination.png
+R|8112|Казнь электричеством|perk-images/Styles/Domination/Electrocute/Electrocute.png
+R|8128|Темная жатва|perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png
+R|9923|Град клинков|perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png
+R|8126|Грязный прием|perk-images/Styles/Domination/CheapShot/CheapShot.png
+R|8139|Вкус крови|perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png
+R|8143|Внезапный удар|perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png
+R|8137|Шестое чувство|perk-images/Styles/Domination/SixthSense/SixthSense.png
+R|8140|Ужасные сувениры|perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png
+R|8141|Глубинный тотем|perk-images/Styles/Domination/DeepWard/DeepWard.png
+R|8135|Охотник за сокровищами|perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png
+R|8105|Беспощадный охотник|perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png
+R|8106|Абсолютный охотник|perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png
+T|8300|Вдохновение|perk-images/Styles/7203_Whimsy.png
+R|8351|Ледяной нарост|perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png
+R|8360|Раскрытая книга заклинаний|perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png
+R|8369|Удар на опережение|perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png
+R|8306|Хекстековый скачок|perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png
+R|8304|Магическая обувь|perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png
+R|8321|Кешбэк|perk-images/Styles/Inspiration/CashBack/CashBack2.png
+R|8313|Тройной тоник|perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png
+R|8352|Тоник искривления времени|perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png
+R|8345|Доставка печенья|perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png
+R|8347|Космическое знание|perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png
+R|8410|Скорость сближения|perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png
+R|8316|Мастер на все руки|perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png
+T|8000|Точность|perk-images/Styles/7201_Precision.png
+R|8005|Решительное наступление|perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png
+R|8008|Смертельный темп|perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png
+R|8021|Искусное лавирование|perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png
+R|8010|Завоеватель|perk-images/Styles/Precision/Conqueror/Conqueror.png
+R|9101|Поглощение жизни|perk-images/Styles/Precision/AbsorbLife/AbsorbLife.png
+R|9111|Триумф|perk-images/Styles/Precision/Triumph.png
+R|8009|Присутствие духа|perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png
+R|9104|Легенда: рвение|perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png
+R|9105|Легенда: ускорение|perk-images/Styles/Precision/LegendHaste/LegendHaste.png
+R|9103|Легенда: родословная|perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png
+R|8014|Удар милосердия|perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png
+R|8017|Реванш|perk-images/Styles/Precision/CutDown/CutDown.png
+R|8299|Последний рубеж|perk-images/Styles/Sorcery/LastStand/LastStand.png
+T|8400|Храбрость|perk-images/Styles/7204_Resolve.png
+R|8437|Хватка нежити|perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png
+R|8439|Дрожь земли|perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png
+R|8465|Страж|perk-images/Styles/Resolve/Guardian/Guardian.png
+R|8446|Снос|perk-images/Styles/Resolve/Demolish/Demolish.png
+R|8463|Живой источник|perk-images/Styles/Resolve/FontOfLife/FontOfLife.png
+R|8401|Удар щитом|perk-images/Styles/Resolve/MirrorShell/MirrorShell.png
+R|8429|Накопление|perk-images/Styles/Resolve/Conditioning/Conditioning.png
+R|8444|Второе дыхание|perk-images/Styles/Resolve/SecondWind/SecondWind.png
+R|8473|Костяная пластина|perk-images/Styles/Resolve/BonePlating/BonePlating.png
+R|8451|Разрастание|perk-images/Styles/Resolve/Overgrowth/Overgrowth.png
+R|8453|Оживление|perk-images/Styles/Resolve/Revitalize/Revitalize.png
+R|8242|Неустрашимость|perk-images/Styles/Sorcery/Unflinching/Unflinching.png
+T|8200|Колдовство|perk-images/Styles/7202_Sorcery.png
+R|8214|Призыв Пушинки|perk-images/Styles/Sorcery/SummonAery/SummonAery.png
+R|8229|Магическая комета|perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png
+R|8230|Штормовой налет|perk-images/Styles/Sorcery/PhaseRush/StormraidersSurgeRuneIcon2.png
+R|8992|Прикосновение огня смерти|perk-images/Styles/Sorcery/DeathfireTouch/DEATHFIRE_TOUCH_KEYSTONE.png
+R|8224|Мастер Аксиом|perk-images/Styles/Sorcery/NullifyingOrb/Axiom_Arcanist.png
+R|8226|Поток маны|perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png
+R|8275|Сияющий плащ|perk-images/Styles/Sorcery/NimbusCloak/6361.png
+R|8210|Превосходство|perk-images/Styles/Sorcery/Transcendence/Transcendence.png
+R|8234|Быстрота|perk-images/Styles/Sorcery/Celerity/CelerityTemp.png
+R|8233|Полная сосредоточенность|perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png
+R|8237|Ожог|perk-images/Styles/Sorcery/Scorch/Scorch.png
+R|8232|Хождение по воде|perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png
+R|8236|Надвигающаяся буря|perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png
+S|5005|Скорость атаки|perk-images/StatMods/StatModsAttackSpeedIcon.png
+S|5008|Сила адаптивности|perk-images/StatMods/StatModsAdaptiveForceIcon.png
+S|5007|Ускорение умений|perk-images/StatMods/StatModsCDRScalingIcon.png
+S|5002|Броня|perk-images/StatMods/StatModsArmorIcon.png
+S|5003|Сопротивление магии|perk-images/StatMods/StatModsMagicResIcon.png
+S|5001|Здоровье|perk-images/StatMods/StatModsHealthScalingIcon.png
+S|5011|Масштаб здоровья|perk-images/StatMods/StatModsHealthPlusIcon.png
+S|5010|Скорость передвижения|perk-images/StatMods/StatModsMovementSpeedIcon.png

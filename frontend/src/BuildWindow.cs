@@ -36,6 +36,9 @@ namespace LolBuildOverlay
         private readonly Button _scan;
         private readonly Button _gear;
         private readonly Button _infoBtn;
+        private readonly Button _arrow;
+        private readonly RunesPanel _runes;
+        private bool _runesOpen;
         private readonly Button _fold;
         private bool _infoOpen;
         private Point _infoDown;
@@ -104,8 +107,32 @@ namespace LolBuildOverlay
                 DragMove();
             };
 
+            _arrow = new Button
+            {
+                Cursor = Cursors.Hand,
+                Template = Ui.GhostCircleTemplate(),
+                Content = UggMark(),
+                ToolTip = "Руны",
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            _arrow.Click += (s, e) =>
+            {
+                e.Handled = true;
+                ToggleRunes();
+            };
+
+            _infoBtn.VerticalAlignment = VerticalAlignment.Center;
+            var earlyRow = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(0, 0, 0, 2)
+            };
+            earlyRow.Children.Add(_infoBtn);
+            earlyRow.Children.Add(new FrameworkElement { Width = 6 });
+            earlyRow.Children.Add(_early);
+
             var top = new StackPanel { Orientation = Orientation.Horizontal };
-            top.Children.Add(_infoBtn);
+            top.Children.Add(_arrow);
             top.Children.Add(new FrameworkElement { Width = 6 });
             top.Children.Add(_row);
             top.Children.Add(new FrameworkElement { Width = 8 });
@@ -182,17 +209,26 @@ namespace LolBuildOverlay
             Grid.SetRow(_wishBox, 2);
             _styles.Children.Add(_wishBox);
 
-            var col = new StackPanel();
-            col.Children.Add(_early);
+            var col = new StackPanel { VerticalAlignment = VerticalAlignment.Top };
+            col.Children.Add(earlyRow);
             col.Children.Add(top);
             col.Children.Add(_styles);
             col.Children.Add(_details);
+
+            _runes = new RunesPanel { Visibility = Visibility.Collapsed };
+            var shell = new Grid { VerticalAlignment = VerticalAlignment.Top };
+            shell.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            shell.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            Grid.SetColumn(_runes, 0);
+            Grid.SetColumn(col, 1);
+            shell.Children.Add(_runes);
+            shell.Children.Add(col);
 
             _body = new Border
             {
                 Background = Brushes.Transparent,
                 Padding = new Thickness(0),
-                Child = col,
+                Child = shell,
                 Cursor = Cursors.Arrow
             };
 
@@ -228,6 +264,28 @@ namespace LolBuildOverlay
         {
             Grid.SetColumn(el, col);
             Grid.SetRow(el, row);
+        }
+
+        static Image UggMark()
+        {
+            var img = new Image
+            {
+                Stretch = Stretch.Uniform,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Margin = new Thickness(1)
+            };
+            if (File.Exists(AppPaths.UggLogo))
+            {
+                var bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.UriSource = new Uri(AppPaths.UggLogo, UriKind.Absolute);
+                bmp.EndInit();
+                bmp.Freeze();
+                img.Source = bmp;
+            }
+            return img;
         }
 
         Button StyleButton(string id, string label)
@@ -378,12 +436,31 @@ namespace LolBuildOverlay
             if (_playMode && HideEarly()) HoldForItems();
         }
 
+        public void SetLiveChampion(string name, string position)
+        {
+            if (_runes != null) _runes.SetLive(name, position);
+        }
+
+        void ToggleRunes()
+        {
+            double right = 0;
+            var placed = !double.IsNaN(Left) && !double.IsNaN(ActualWidth) && ActualWidth > 0;
+            if (placed) right = Left + ActualWidth;
+            var top = Top;
+            _runesOpen = !_runesOpen;
+            _runes.Visibility = _runesOpen ? Visibility.Visible : Visibility.Collapsed;
+            _arrow.ToolTip = _runesOpen ? "Скрыть руны" : "Руны";
+            UpdateLayout();
+            if (placed && ActualWidth > 0) Left = right - ActualWidth;
+            if (!double.IsNaN(top)) Top = top;
+        }
+
         void AlignToBuild()
         {
-            var left = _infoBtn.Width + 6;
+            var left = _arrow.Width + 6;
             if (left < 6) left = AppSettings.IconSize + 6;
             _styles.Margin = new Thickness(left + 3, 2, 0, 0);
-            _early.Margin = new Thickness(left, 0, 0, 2);
+            _early.Margin = new Thickness(0);
         }
 
         bool HideEarly()
@@ -405,6 +482,7 @@ namespace LolBuildOverlay
             var star = size;
             var ctrl = Math.Max(12, size - 10);
             _infoBtn.Width = _infoBtn.Height = star;
+            _arrow.Width = _arrow.Height = star;
             _scan.Width = _scan.Height = ctrl;
             _gear.Width = _gear.Height = ctrl;
             _fold.Width = _fold.Height = ctrl;
@@ -619,7 +697,7 @@ namespace LolBuildOverlay
         private void SyncFold()
         {
             if (_fold == null) return;
-            _fold.Content = Ui.GlowText(_infoOpen ? "▲" : "▼", 9, Color.FromRgb(232, 196, 110));
+            _fold.Content = Ui.ChevronGlyph(!_infoOpen);
             _fold.ToolTip = _infoOpen ? "Скрыть объяснения" : "Показать объяснения";
         }
     }

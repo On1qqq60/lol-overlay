@@ -23,6 +23,14 @@ namespace LolBuildOverlay
     {
         public static readonly string Root = AppDomain.CurrentDomain.BaseDirectory;
         public static readonly string ItemsDir = Path.Combine(Root, "assets", "items");
+        public static readonly string RunesFile = FirstExisting(
+            Path.Combine(Root, "data", "runes.txt"),
+            Path.Combine(Root, "..", "data", "runes.txt"));
+        public static readonly string ChampionsFile = FirstExisting(
+            Path.Combine(Root, "data", "champions.txt"),
+            Path.Combine(Root, "..", "data", "champions.txt"));
+        public static readonly string RuneIconsDir = Path.Combine(Root, "assets", "runes");
+        public static readonly string ChampionIconsDir = Path.Combine(Root, "assets", "champions");
         public static readonly string NamesFile = FirstExisting(
             Path.Combine(Root, "data", "names.txt"),
             Path.Combine(Root, "..", "data", "names.txt"));
@@ -32,6 +40,9 @@ namespace LolBuildOverlay
         public static readonly string AppIconFile = FirstExisting(
             Path.Combine(Root, "app.ico"),
             Path.Combine(Root, "..", "app.ico"));
+        public static readonly string UggLogo = FirstExisting(
+            Path.Combine(Root, "assets", "ugg.png"),
+            Path.Combine(Root, "..", "assets", "ugg.png"));
         public static readonly string PromptsDir = FirstDir(
             Path.Combine(Root, "prompts"),
             Path.GetFullPath(Path.Combine(Root, "..", "prompts")));

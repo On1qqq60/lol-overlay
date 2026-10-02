@@ -43,6 +43,15 @@ namespace LolBuildOverlay
                 user += "\n\nТип урона: магический. Все 6 предметов и путь до них собираются от силы умений этого чемпиона.";
             if (!string.IsNullOrEmpty(wish))
                 user += "\n\nПожелание игрока, его надо выполнить: " + wish + ". Чемпион и роль остаются из снимка. Сборка должна быть сильной на этом герое и при этом делать то, что он просит.";
+            if (match != null && match.Me != null)
+            {
+                var card = ChampionCards.Find(match.Me.championName, PositionCode(match.Me));
+                if (card.Length > 0)
+                    user += "\n\nЦель этого чемпиона на этой роли. Она задаёт, как он дерётся. Стиль решает, какие из слотов урон, а какие защита:\n" + card;
+                var cores = OpggBuilds.Text(match.Me.championName, PositionCode(match.Me));
+                if (cores.Length > 0)
+                    user += "\n\n" + cores;
+            }
 
             try
             {
@@ -561,6 +570,17 @@ namespace LolBuildOverlay
                 sb.Append(" ").Append(p.scores.kills).Append("/").Append(p.scores.deaths).Append("/").Append(p.scores.assists);
             sb.Append(" предметы: ").Append(ItemList(p));
             return sb.ToString();
+        }
+
+        static string PositionCode(LivePlayer p)
+        {
+            if (p == null) return "";
+            var pos = (p.position ?? "").Trim().ToUpperInvariant();
+            if (pos == "MID") pos = "MIDDLE";
+            if (pos == "TOP" || pos == "JUNGLE" || pos == "MIDDLE" || pos == "BOTTOM" || pos == "UTILITY")
+                return pos;
+            if (HasSmite(p)) return "JUNGLE";
+            return "";
         }
 
         static string RoleName(LivePlayer p)
